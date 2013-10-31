@@ -41,8 +41,6 @@ class KATProvider(generic.TorrentProvider):
         
         self.supportsBacklog = True
 
-        self.cache = KATCache(self)
-
         self.url = 'https://kickass.to/'
 
     def isEnabled(self):
@@ -324,36 +322,5 @@ class KATProvider(generic.TorrentProvider):
 #        <enclosure url="https://torcache.net/torrent/556022412DE29EE0B0AC1ED83EF610AA3081CDA4.torrent?title=[kat.ph]james.mays.things.you.need.to.know.s02e06.hdtv.xvid.afg" length="255009149" type="application/x-bittorrent" />
 #    </item>
 
-
-class KATCache(tvcache.TVCache):
-
-    def __init__(self, provider):
-
-        tvcache.TVCache.__init__(self, provider)
-
-        # only poll KAT every 15 minutes max
-        self.minTime = 15
-
-
-    def _getRSSData(self):
-        url = self.provider.url + 'tv/?rss=1'
-
-        logger.log(u"KAT cache update URL: "+ url, logger.DEBUG)
-
-        data = self.provider.getURL(url)
-
-        return data
-
-    def _parseItem(self, item):
-
-        (title, url) = self.provider._get_title_and_url(item)
-
-        if not title or not url:
-            logger.log(u"The XML returned from the KAT RSS feed is incomplete, this result is unusable", logger.ERROR)
-            return
-            
-        logger.log(u"Adding item from RSS to cache: "+title, logger.DEBUG)
-
-        self._addCacheEntry(title, url)
 
 provider = KATProvider()
