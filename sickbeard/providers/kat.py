@@ -84,7 +84,7 @@ class KATProvider(generic.TorrentProvider):
             return params
         global lang
         lang = show.audio_lang
-        params['show_name'] = helpers.sanitizeSceneName(show.name).replace('.',' ').encode('utf-8')
+        params['show_name'] = helpers.sanitizeSceneName(show.name).replace('.',' ').replace('!','').encode('utf-8')
           
         if season != None:
             params['season'] = season
@@ -100,13 +100,13 @@ class KATProvider(generic.TorrentProvider):
         if not ep_obj:
             return [params]
 
-        params['show_name'] = helpers.sanitizeSceneName(ep_obj.show.name).replace('.',' ').encode('utf-8')
+        params['show_name'] = helpers.sanitizeSceneName(ep_obj.show.name).replace('.',' ').replace('!','').encode('utf-8')
         
         if ep_obj.show.air_by_date:
             params['date'] = str(ep_obj.airdate)
         else:
-            params['season'] = ep_obj.season
-            params['episode'] = ep_obj.episode
+            params['season'] = ep_obj.scene_season
+            params['episode'] = ep_obj.scene_episode
 
         to_return = [params]
 

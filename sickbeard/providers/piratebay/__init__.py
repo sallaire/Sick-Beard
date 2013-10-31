@@ -190,9 +190,9 @@ class ThePirateBayProvider(generic.TorrentProvider):
         else:
             for show_name in set(show_name_helpers.allPossibleShowNames(ep_obj.show)):
                 ep_string = show_name_helpers.sanitizeSceneName(show_name) +' '+ \
-                sickbeard.config.naming_ep_type[2] % {'seasonnumber': ep_obj.season, 'episodenumber': ep_obj.episode} +'|'+\
-                sickbeard.config.naming_ep_type[0] % {'seasonnumber': ep_obj.season, 'episodenumber': ep_obj.episode} +'|'+\
-                sickbeard.config.naming_ep_type[3] % {'seasonnumber': ep_obj.season, 'episodenumber': ep_obj.episode} \
+                sickbeard.config.naming_ep_type[2] % {'seasonnumber': ep_obj.scene_season, 'episodenumber': ep_obj.scene_episode} +'|'+\
+                sickbeard.config.naming_ep_type[0] % {'seasonnumber': ep_obj.scene_season, 'episodenumber': ep_obj.scene_episode} +'|'+\
+                sickbeard.config.naming_ep_type[3] % {'seasonnumber': ep_obj.scene_season, 'episodenumber': ep_obj.scene_episode} \
 
                 search_string['Episode'].append(ep_string)
     
@@ -206,7 +206,7 @@ class ThePirateBayProvider(generic.TorrentProvider):
         for mode in search_params.keys():
             for search_string in search_params[mode]:
 
-                searchURL = self.proxy._buildURL(self.searchurl %(urllib.quote(search_string.encode("utf-8"))))    
+                searchURL = self.proxy._buildURL(self.searchurl %(urllib.quote(search_string.replace('!','').encode("utf-8"))))    
         
                 logger.log(u"Search string: " + searchURL, logger.DEBUG)
         
