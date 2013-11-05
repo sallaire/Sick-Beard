@@ -25,14 +25,14 @@ from sickbeard.clients.generic import GenericClient
 
 class TransmissionAPI(GenericClient):
     
-    def __init__(self, host=None, username=None, password=None):
-        
-        super(TransmissionAPI, self).__init__('Transmission', host, username, password)
-        
-        if self.host.endswith(':\d{2,4}/?'):
-	    self.url = self.host + 'transmission/rpc'
-	else
-	    self.url = self.host + 'rpc' 
+    def __init__(self, host=None, username=None, password=None, custom_url=None):
+	        
+        super(TransmissionAPI, self).__init__('Transmission', host, username, password, custom_url)
+
+        if self.custom_url:
+            self.url = self.host + 'rpc'
+        else:
+            self.url = self.host + 'transmission/rpc' 
 
     def _get_auth(self):
 
