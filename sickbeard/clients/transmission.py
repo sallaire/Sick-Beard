@@ -25,11 +25,13 @@ from sickbeard.clients.generic import GenericClient
 
 class TransmissionAPI(GenericClient):
     
-    def __init__(self, host=None, username=None, password=None):
+    def __init__(self, host=None, username=None, password=None, custom_url=None):
         
         super(TransmissionAPI, self).__init__('Transmission', host, username, password)
         
-        if sickbeard.TORRENT_CUSTOM_URL:
+        self.custom_url = sickbeard.TORRENT_CUSTOM_URL if custom_url is None else custom_url
+        
+        if self.custom_url:
 	        self.url = self.host + 'rpc'
         else:
             self.url = self.host + 'transmission/rpc' 
