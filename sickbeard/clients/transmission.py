@@ -32,7 +32,7 @@ class TransmissionAPI(GenericClient):
         self.custom_url = sickbeard.TORRENT_CUSTOM_URL if custom_url is None else custom_url
         
         if self.custom_url:
-	        self.url = self.host + 'rpc'
+            self.url = self.host + 'rpc'
         else:
             self.url = self.host + 'transmission/rpc' 
 
