@@ -111,6 +111,7 @@ def retrieve_exceptions():
             return False
 
         myDB = db.DBConnection("cache.db")
+        myDB.action("DELETE FROM scene_exceptions") # flush current list
         
         # write all the exceptions we got off the net into the database
         for cur_tvdb_id in exception_dict:
