@@ -1,7 +1,6 @@
 ![preview thumb](http://i.imgur.com/OeXSAkU.png)
 
-A fork of SickBeard VO/VF by sarakha63
-Add TPI torrent provider
+SickBeard VO/VF by sarakha63
 =====
 
 This version is based on Midgetspy's and mr-oranges work:
