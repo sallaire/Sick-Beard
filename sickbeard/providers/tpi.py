@@ -1,5 +1,5 @@
 # -*- coding: latin-1 -*-
-# Author: Guillaume Serre <guillaume.serre@gmail.com>
+# Author: orion1024 <orion1024@gmail.com>
 # URL: http://code.google.com/p/sickbeard/
 #
 # This file is part of Sick Beard.
@@ -27,32 +27,6 @@ import urllib
 import urllib2
 import re
 
-
-# import sys
-import httplib
-import time
-DebugLogFileName="/home/orion1024/Documents/logs/tpi-debug.log"
-DebugHTTPLogFileName="/home/orion1024/Documents/logs/tpi-debug-http.log"
-
-class MyHTTPSConnection(httplib.HTTPSConnection):
-    def send(self, s):
-        dbgFile = open(DebugHTTPLogFileName,"a")
-        
-        dbgFile.write("\n%%%%%%%%%%%%%%%%%%%%%%%% Sending this request... %%%%%%%%%%%%%%%%%%%%%%%%\n")
-        dbgFile.write("%%%%%%%%%%%%%%%%%%%%%%%% " + time.strftime("%d/%m/%Y %H:%M:%S") + " %%%%%%%%%%%%%%%%%%%%%%%%\n")
-        dbgFile.write(str(s))
-        dbgFile.write("\n%%%%%%%%%%%%%%%%%%%%%%%% End of request... %%%%%%%%%%%%%%%%%%%%%%%%\n")
-        dbgFile.close()
-
-        httplib.HTTPSConnection.send(self, s)
-        
-
-
-class MyHTTPSHandler(urllib2.HTTPSHandler):
-    def https_open(self, req):
-        return self.do_open(MyHTTPSConnection, req)
-
-
 class TPIProvider(generic.TorrentProvider):
 
     def __init__(self):
@@ -62,7 +36,6 @@ class TPIProvider(generic.TorrentProvider):
         self.supportsBacklog = True
         
         self.cj = cookielib.CookieJar()
-        # self.opener = urllib2.build_opener(MyHTTPSHandler(), urllib2.HTTPCookieProcessor(self.cj))
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         
         self.url = "https://www.thepirateisland.net"
@@ -76,7 +49,6 @@ class TPIProvider(generic.TorrentProvider):
     
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
 
-#              search=no+limit&parent_cat=0&cat=0&incldead=0&freeleech=0&lang=0
         results = []
         if audio_lang == "en" and french==None:
             results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VOSTFR", 'cat': 0, 'incldead' : 0, 'lang' : 1  } ))
@@ -131,59 +103,27 @@ class TPIProvider(generic.TorrentProvider):
     
     def _doLogin(self, login, password):
 
-        # dbgFile = open(DebugLogFileName,"a")
-        
         # TPI is using an antibot slide bar. However it can be bypassed easily... Credits goes to drew010 (see http://stackoverflow.com/questions/10609201/qaptcha-is-it-effective)
-        
-          
         fake_qaptcha_key = 'thisIsAFakeKey12345';  # arbitrary qaptcha_key - normally by client JavaScript
         
-        # dbgFile.write(u"--------------------------------------------------------\nconnexion initiale\n")
         # fetch the form - this creates a PHP session and gives us a cookie (yum)
         r = self.opener.open(self.url + '/connexion.php')
-
-        # dbgFile.write(r.read()+"\n")
 
         # This step is important - this stores a "qaptcha_key" in the PHP session that matches our session cookie
         # We can make the key up in this step, it doesn't matter what it is or where it came from
         simulateQaptchaSlideData = urllib.urlencode({'action': 'qaptcha', 'qaptcha_key' : fake_qaptcha_key})
 
-        # dbgFile.write(u"---------\nsimulation qaptcha\n")
-
-        # dbgFile.write(simulateQaptchaSlideData+"\n")
-
-        #req = urllib2.Request(self.url + '/php/Qaptcha.jquery.php', simulateQaptchaSlideData, 
-           #                    {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
-               #                  'Referer' : 'https://www.thepirateisland.net/connexion.php?returnto=Lw==',
-                #                 'Accept-Encoding' : 'gzip, deflate',
-                #                 'Accept' : 'application/json, text/javascript, */*; q=0.01',
-                #                 'Accept-Language' : 'en-US,en;q=0.5',
-                #                 'Connection' : 'keep-alive',
-                #                 'X-Requested-With' : 'XMLHttpRequest',
-                #                 'Content-Type' : 'application/x-www-form-urlencoded; charset=UTF-8',
-                 #                'Pragma' : 'no-cache',
-                #                 'Cache-Control' : 'no-cache'
-                 #                })
         req = urllib2.Request(self.url + '/php/Qaptcha.jquery.php', simulateQaptchaSlideData, 
                              {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0'})
         r = self.opener.open(req)
-        
-        # dbgFile.write("---------\nCode = " + str(r.getcode())+"\n")
-        # dbgFile.write(str(r.info())+"\n")
 
-        # dbgFile.write(u"---------\nTrying to log in...\n")
         data = urllib.urlencode({'username': login, 'password' : password, fake_qaptcha_key : '', 'submit' : 'Connexion', 'returnto' : '/'})
-        # dbgFile.write(data+"\n")
         
         req = urllib2.Request(self.url + '/connexion.php', data, 
                                  {'User-Agent': 'Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:26.0) Gecko/20100101 Firefox/26.0',
                                  'Referer' : 'https://www.thepirateisland.net/connexion.php?returnto=Lw==' })
 
         r = self.opener.open(req)
-
-        # dbgFile.write("---------\nCode = " + str(r.getcode())+"\n")
-        # dbgFile.write(str(r.info())+"\n")
-        # dbgFile.write("---------Cookies : \n")
         
         for index, cookie in enumerate(self.cj):
             if (cookie.name == "pass"): self.login_done = True
@@ -194,37 +134,23 @@ class TPIProvider(generic.TorrentProvider):
         
         if self.login_done and not self.successful_login_logged:
             logger.log(u"Login to TPI successful", logger.MESSAGE) 
-            self.successful_login_logged = True
-        
-        # dbgFile.write(u"---------\nFin resultat\n")
-        
-        # dbgFile.close()
-        
+            self.successful_login_logged = True        
 
     def _doSearch(self, searchString, show=None, season=None, french=None):
 
-
-        # dbgFile = open(DebugLogFileName,"a")
         
         if not self.login_done:
             self._doLogin( sickbeard.TPI_USERNAME, sickbeard.TPI_PASSWORD )
 
         results = []
 
-# en attendant...
-# /parcourir.php?search=marecherche&parent_cat=0&cat=0&incldead=0&freeleech=0&lang=
         searchUrl = self.url + '/parcourir.php?' + searchString.replace('!','')
-        # searchUrl = "https://www.thepirateisland.net/parcourir.php?search=no+limit&parent_cat=0&cat=0&incldead=0&freeleech=0&lang=0"
-
+ 
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
         
         r = self.opener.open( searchUrl )
 
-        # dbgFile.write("%%%%%%%%%%%%%%%%%%%%%%%%%%\nSearch URL = "+ searchUrl + "\n%%%%%%%%%%%%%%%%%%%%%%%%%%\n")
-
         soup = BeautifulSoup( r, "html.parser" )
-
-
 
         resultsTable = soup.find("table", { "class" : "ttable_headinner" })
         if resultsTable:
@@ -238,8 +164,6 @@ class TPIProvider(generic.TorrentProvider):
 
                 downloadURL = row.find("a",href=re.compile("\.torrent"))['href']
                 
-                # dbgFile.write("--------- Title found : " + title + "\n")
-                # dbgFile.write("--------- URL found : " + str(downloadURL) + "\n")
                 
                 quality = Quality.nameQuality( title )
                 if quality==Quality.UNKNOWN and title:
@@ -251,9 +175,6 @@ class TPIProvider(generic.TorrentProvider):
                     results.append( TPISearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
                 else:
                     results.append( TPISearchResult( self.opener, title, downloadURL, quality ) )
-
-        # dbgFile.write("Results : \n" + str(results) + "\n")
-        # dbgFile.close()
         
         return results
     
