@@ -1361,7 +1361,7 @@ class ConfigProviders:
                       tvtorrents_digest=None, tvtorrents_hash=None,
                       torrentleech_key=None,
                       btn_api_key=None,
-                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,
+                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,tpi_username=None,tpi_password=None, 
                       gks_key=None,
                       provider_order=None):
 
@@ -1436,6 +1436,8 @@ class ConfigProviders:
                 sickbeard.BINNEWZ = curEnabled
             elif curProvider == 't411':
                 sickbeard.T411 = curEnabled
+            elif curProvider == 'tpi':
+                sickbeard.TPI = curEnabled
             elif curProvider == 'cpasbien':
                 sickbeard.Cpasbien = curEnabled
             elif curProvider == 'kat':
@@ -1458,6 +1460,9 @@ class ConfigProviders:
 
         sickbeard.T411_USERNAME = t411_username
         sickbeard.T411_PASSWORD = t411_password
+
+        sickbeard.TPI_USERNAME = tpi_username
+        sickbeard.TPI_PASSWORD = tpi_password
 
         sickbeard.NZBSRUS_UID = nzbs_r_us_uid.strip()
         sickbeard.NZBSRUS_HASH = nzbs_r_us_hash.strip()
