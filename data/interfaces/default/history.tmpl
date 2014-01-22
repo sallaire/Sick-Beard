@@ -60,7 +60,7 @@
     #end if
     <td align="center" #if $curStatus == SUBTITLED then 'class="subtitles_column"' else ''#><span style="cursor: help;" title="$os.path.basename($hItem["resource"])">$statusStrings[$curStatus]</span>
     	#if $curStatus == SUBTITLED:
-    		<img width="16" height="11" src="/images/flags/<%= hItem["resource"][len(hItem["resource"])-6:len(hItem["resource"])-4]+'.png'%>">
+    		<img width="16" height="11" src="$sbRoot/images/flags/<%= hItem["resource"][len(hItem["resource"])-6:len(hItem["resource"])-4]+'.png'%>">
 		#end if    
     </td>
     <td align="center">
