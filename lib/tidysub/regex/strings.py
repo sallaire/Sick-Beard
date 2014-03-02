@@ -30,4 +30,6 @@ def get_teams():
              "Synchro par", \
              "Sync par", \
              "Trad :", \
-             "tvsubtitles"]
+             "tvsubtitles", \
+             "Traduit par la communauté",
+             ]
