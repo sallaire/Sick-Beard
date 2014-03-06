@@ -56,7 +56,6 @@ class GksProvider(generic.TorrentProvider):
                 if sickbeard.USE_SUBTITLES :
                     results.append( urllib.urlencode( {'q': searchString, 'category' : 11, 'ak' : sickbeard.GKS_KEY} ) + "&order=desc&sort=normal&exact" )
                     results.append( urllib.urlencode( {'q': searchString, 'category' : 13, 'ak' : sickbeard.GKS_KEY} ) + "&order=desc&sort=normal&exact" )
-                    results.append( urllib.urlencode( {'q': searchString, 'category' : 13, 'ak' : sickbeard.GKS_KEY} ) + "&order=desc&sort=normal&exact" )
             elif audio_lang == "fr":
                 results.append( urllib.urlencode( {'q': searchString, 'category' : 12, 'ak' : sickbeard.GKS_KEY} ) + "&order=desc&sort=normal&exact" )
                 results.append( urllib.urlencode( {'q': searchString, 'category' : 14, 'ak' : sickbeard.GKS_KEY} ) + "&order=desc&sort=normal&exact" )
