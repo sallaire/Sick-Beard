@@ -382,7 +382,8 @@ class TidySub:
 
         #Remove BOM character
         self._sub_list[0] = re.sub(u'\ufeff', '', self._sub_list[0], re.UNICODE)
-            
+        self._sub_list[0] = re.sub(u'ï»¿', '', self._sub_list[0], re.UNICODE)
+
 
         #Delete unnecessary lines
         i = 0
