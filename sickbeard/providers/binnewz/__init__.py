@@ -64,7 +64,7 @@ class BinNewzProvider(generic.NZBProvider):
 
     qualityCategories = {
         3: ['24', '7', '56'],
-        500: ['44', '53']
+        500: ['44', '53', '59']
     }
 
     qualityMinSize = {
