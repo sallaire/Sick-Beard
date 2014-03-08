@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 def get_guess_english():
     
     return [ 'the', 'of', 'to', 'and', 'in']
