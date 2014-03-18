@@ -62,7 +62,7 @@ class FrenchFinder():
         
         #for each episode in frenchlist fire a search in french
         delay=[]
-        rest=count
+        rest=count[0][0]
         for frepisode in frenchlist:
             rest=rest-1    
             if frepisode.show.tvdbid in delay:
