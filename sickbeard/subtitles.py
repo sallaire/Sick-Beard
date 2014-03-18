@@ -106,7 +106,7 @@ class SubtitlesFinder():
         myDB = db.DBConnection()
         today = datetime.date.today().toordinal()
         # you have 5 minutes to understand that one. Good luck
-        sqlResults = myDB.select('SELECT s.show_name, e.showid, e.season, e.episode, e.status, e.subtitles, e.subtitles_searchcount AS searchcount, e.subtitles_lastsearch AS lastsearch, e.location, (? - e.airdate) AS airdate_daydiff FROM tv_episodes AS e INNER JOIN tv_shows AS s ON (e.showid = s.tvdb_id) WHERE s.subtitles = 1 AND e.subtitles NOT LIKE (?) AND ((e.subtitles_searchcount <= 2 AND (? - e.airdate) > 7) OR (e.subtitles_searchcount <= 9 AND (? - e.airdate) <= 7)) AND (e.status IN ('+','.join([str(x) for x in Quality.DOWNLOADED])+') OR (e.status IN ('+','.join([str(x) for x in Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_FRENCH ])+') AND e.location != ""))', [today, wantedLanguages(True), today, today])
+        sqlResults = myDB.select('SELECT s.show_name, e.showid, e.season, e.episode, e.status, e.subtitles, e.subtitles_searchcount AS searchcount, e.subtitles_lastsearch AS lastsearch, e.location, (? - e.airdate) AS airdate_daydiff FROM tv_episodes AS e INNER JOIN tv_shows AS s ON (e.showid = s.tvdb_id) WHERE s.subtitles = 1 AND e.subtitles NOT LIKE (?) AND ((e.subtitles_searchcount <= 32 AND (? - e.airdate) > 7) OR (e.subtitles_searchcount <= 18 AND (? - e.airdate) <= 7)) AND (e.status IN ('+','.join([str(x) for x in Quality.DOWNLOADED])+') OR (e.status IN ('+','.join([str(x) for x in Quality.SNATCHED + Quality.SNATCHED_PROPER + Quality.SNATCHED_FRENCH ])+') AND e.location != ""))', [today, wantedLanguages(True), today, today])
         if len(sqlResults) == 0:
             logger.log('No subtitles to download', logger.MESSAGE)
             return
@@ -144,9 +144,9 @@ class SubtitlesFinder():
                         logger.log(u'Unable to find subtitles', logger.DEBUG)
                         return
             else:
-                if ((epToSub['airdate_daydiff'] > 7 and epToSub['searchcount'] < 2 and now - datetime.datetime.strptime(epToSub['lastsearch'], '%Y-%m-%d %H:%M:%S') > datetime.timedelta(hours=rules['old'][epToSub['searchcount']])) or
+                if ((epToSub['airdate_daydiff'] > 7 and epToSub['searchcount'] < 32 and now - datetime.datetime.strptime(epToSub['lastsearch'], '%Y-%m-%d %H:%M:%S') > datetime.timedelta(hours=rules['old'][epToSub['searchcount']])) or
                     # Recent shows rule 
-                    (epToSub['airdate_daydiff'] <= 7 and epToSub['searchcount'] < 9 and now - datetime.datetime.strptime(epToSub['lastsearch'], '%Y-%m-%d %H:%M:%S') > datetime.timedelta(hours=rules['new'][epToSub['searchcount']]))):
+                    (epToSub['airdate_daydiff'] <= 7 and epToSub['searchcount'] < 18 and now - datetime.datetime.strptime(epToSub['lastsearch'], '%Y-%m-%d %H:%M:%S') > datetime.timedelta(hours=rules['new'][epToSub['searchcount']]))):
                     logger.log('Downloading subtitles for episode %dx%d of show %s' % (epToSub['season'], epToSub['episode'], epToSub['show_name']), logger.DEBUG)
                     
                     showObj = helpers.findCertainShow(sickbeard.showList, int(epToSub['showid']))
@@ -175,4 +175,4 @@ class SubtitlesFinder():
         - the episode: new or old
         - the number of searches done so far (searchcount), represented by the index of the list
         """
-        return {'old': [0, 24], 'new': [0, 6, 4, 4, 2, 2, 2, 2, 2], 'newold' : [0, 24, 6, 6, 6, 24, 24]}
+        return {'old': [0, 12, 12, 12, 12, 12, 12, 12, 12, 12, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24, 24], 'new': [0, 4, 4, 6, 2, 2, 2, 4, 12, 12, 12, 12, 12, 12, 12, 12, 24, 24], 'newold' : [0, 24, 6, 6, 6, 24, 24]}
