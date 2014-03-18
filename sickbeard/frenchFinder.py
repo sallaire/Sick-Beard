@@ -62,7 +62,9 @@ class FrenchFinder():
         
         #for each episode in frenchlist fire a search in french
         delay=[]
+        rest=count
         for frepisode in frenchlist:
+            rest=rest-1    
             if frepisode.show.tvdbid in delay:
                 logger.log(u"Previous episode for show "+str(frepisode.show.tvdbid)+" not found in french so skipping this search", logger.DEBUG)
                 continue
@@ -115,4 +117,5 @@ class FrenchFinder():
             else:
                 delay.append(frepisode.show.tvdbid)
                 logger.log(u"No french episodes found for " +frepisode.show.name +" season "+str(frepisode.season)+" episode "+str(frepisode.episode))
-        
+            logger.log(str(rest) + u" episodes left")
+            
