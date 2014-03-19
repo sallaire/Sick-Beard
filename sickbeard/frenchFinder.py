@@ -116,6 +116,6 @@ class FrenchFinder():
                     pass
             else:
                 delay.append(frepisode.show.tvdbid)
-                logger.log(u"No french episodes found for " +frepisode.show.name +" season "+str(frepisode.season)+" episode "+str(frepisode.episode))
+                logger.log(u"No french episode found for " +frepisode.show.name +" season "+str(frepisode.season)+" episode "+str(frepisode.episode))
             logger.log(str(rest) + u" episodes left")
             
