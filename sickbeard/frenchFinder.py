@@ -94,7 +94,7 @@ class FrenchFinder():
                         for fil in resultFilters + ignore_words.split(','):
                             if fil == showLanguages.get(u"fr"):
                                 continue
-                            if re.search('(^|[\W_])'+fil+'($|[\W_])', x.url, re.I):
+                            if re.search('(^|[\W_])'+fil+'($|[\W_])', x.url, re.I) or re.search('(^|[\W_])'+fil+'($|[\W_])', x.name, re.I) :
                                 logger.log(u"Invalid scene release: "+x.url+" contains "+fil+", ignoring it", logger.DEBUG)
                                 test+=1
                     if test==0:
