@@ -74,7 +74,7 @@ class FrenchFinder():
                 if not curProvider.isActive():
                     continue
 
-                logger.log(u"Searching for french episodes on "+curProvider.name +" for " +frepisode.show.name +" season "+str(frepisode.season)+" episode "+str(frepisode.episode))
+                logger.log(u"Searching for french episode on "+curProvider.name +" for " +frepisode.show.name +" season "+str(frepisode.season)+" episode "+str(frepisode.episode))
                 try:
                     curfrench = curProvider.findFrench(frepisode, manualSearch=True)
                 except:
