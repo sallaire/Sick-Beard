@@ -1503,7 +1503,6 @@ class ConfigNotifications:
                           use_growl=None, growl_notify_onsnatch=None, growl_notify_ondownload=None, growl_notify_onsubtitledownload=None, growl_host=None, growl_password=None, 
                           use_prowl=None, prowl_notify_onsnatch=None, prowl_notify_ondownload=None, prowl_notify_onsubtitledownload=None, prowl_api=None, prowl_priority=0, 
                           use_twitter=None, twitter_notify_onsnatch=None, twitter_notify_ondownload=None, twitter_notify_onsubtitledownload=None, 
-                          use_notifo=None, notifo_notify_onsnatch=None, notifo_notify_ondownload=None, notifo_notify_onsubtitledownload=None, notifo_username=None, notifo_apisecret=None,
                           use_boxcar=None, boxcar_notify_onsnatch=None, boxcar_notify_ondownload=None, boxcar_notify_onsubtitledownload=None, boxcar_username=None,
                           use_pushover=None, pushover_notify_onsnatch=None, pushover_notify_ondownload=None, pushover_notify_onsubtitledownload=None, pushover_userkey=None,
                           use_libnotify=None, libnotify_notify_onsnatch=None, libnotify_notify_ondownload=None, libnotify_notify_onsubtitledownload=None,
@@ -1515,6 +1514,7 @@ class ConfigNotifications:
                           pytivo_host=None, pytivo_share_name=None, pytivo_tivo_name=None,
                           use_nma=None, nma_notify_onsnatch=None, nma_notify_ondownload=None, nma_notify_onsubtitledownload=None, nma_api=None, nma_priority=0,
                           use_pushalot=None, pushalot_notify_onsnatch=None, pushalot_notify_ondownload=None, pushalot_notify_onsubtitledownload=None, pushalot_authorizationtoken=None,
+                          use_pushbullet=None, pushbullet_notify_onsnatch=None, pushbullet_notify_ondownload=None, pushbullet_notify_onsubtitledownload=None, pushbullet_api=None, pushbullet_device=None, pushbullet_device_list=None,          
                           use_mail=None, mail_username=None, mail_password=None, mail_server=None, mail_ssl=None, mail_from=None, mail_to=None, mail_notify_onsnatch=None ):
 
 
@@ -1640,26 +1640,6 @@ class ConfigNotifications:
             use_twitter = 1
         else:
             use_twitter = 0
-
-        if notifo_notify_onsnatch == "on":
-            notifo_notify_onsnatch = 1
-        else:
-            notifo_notify_onsnatch = 0
-
-        if notifo_notify_ondownload == "on":
-            notifo_notify_ondownload = 1
-        else:
-            notifo_notify_ondownload = 0
-            
-        if notifo_notify_onsubtitledownload == "on":
-            notifo_notify_onsubtitledownload = 1
-        else:
-            notifo_notify_onsubtitledownload = 0
-            
-        if use_notifo == "on":
-            use_notifo = 1
-        else:
-            use_notifo = 0
 
         if boxcar_notify_onsnatch == "on":
             boxcar_notify_onsnatch = 1
@@ -1835,6 +1815,25 @@ class ConfigNotifications:
         else:
             pushalot_notify_onsubtitledownload = 0
 
+        if use_pushbullet == "on":
+            use_pushbullet = 1
+        else:
+            use_pushbullet = 0
+
+        if pushbullet_notify_onsnatch == "on":
+            pushbullet_notify_onsnatch = 1
+        else:
+            pushbullet_notify_onsnatch = 0
+  
+        if pushbullet_notify_ondownload == "on":
+            pushbullet_notify_ondownload = 1
+        else:
+            pushbullet_notify_ondownload = 0
+
+        if pushbullet_notify_onsubtitledownload == "on":
+            pushbullet_notify_onsubtitledownload = 1
+        else:
+            pushbullet_notify_onsubtitledownload = 0
 
         sickbeard.USE_XBMC = use_xbmc
         sickbeard.XBMC_NOTIFY_ONSNATCH = xbmc_notify_onsnatch
@@ -1875,13 +1874,6 @@ class ConfigNotifications:
         sickbeard.TWITTER_NOTIFY_ONSNATCH = twitter_notify_onsnatch
         sickbeard.TWITTER_NOTIFY_ONDOWNLOAD = twitter_notify_ondownload
         sickbeard.TWITTER_NOTIFY_ONSUBTITLEDOWNLOAD = twitter_notify_onsubtitledownload
-
-        sickbeard.USE_NOTIFO = use_notifo
-        sickbeard.NOTIFO_NOTIFY_ONSNATCH = notifo_notify_onsnatch
-        sickbeard.NOTIFO_NOTIFY_ONDOWNLOAD = notifo_notify_ondownload
-        sickbeard.NOTIFO_NOTIFY_ONSUBTITLEDOWNLOAD = notifo_notify_onsubtitledownload
-        sickbeard.NOTIFO_USERNAME = notifo_username
-        sickbeard.NOTIFO_APISECRET = notifo_apisecret
 
         sickbeard.USE_BOXCAR = use_boxcar
         sickbeard.BOXCAR_NOTIFY_ONSNATCH = boxcar_notify_onsnatch
@@ -1956,6 +1948,13 @@ class ConfigNotifications:
         sickbeard.PUSHALOT_NOTIFY_ONDOWNLOAD = pushalot_notify_ondownload
         sickbeard.PUSHALOT_NOTIFY_ONSUBTITLEDOWNLOAD = pushalot_notify_onsubtitledownload
         sickbeard.PUSHALOT_AUTHORIZATIONTOKEN = pushalot_authorizationtoken
+
+        sickbeard.USE_PUSHBULLET = use_pushbullet
+        sickbeard.PUSHBULLET_NOTIFY_ONSNATCH = pushbullet_notify_onsnatch
+        sickbeard.PUSHBULLET_NOTIFY_ONDOWNLOAD = pushbullet_notify_ondownload
+        sickbeard.PUSHBULLET_NOTIFY_ONSUBTITLEDOWNLOAD = pushbullet_notify_onsubtitledownload
+        sickbeard.PUSHBULLET_API = pushbullet_api
+        sickbeard.PUSHBULLET_DEVICE = pushbullet_device_list
 
         sickbeard.save_config()
 
@@ -2659,16 +2658,6 @@ class Home:
             return "Test prowl notice failed"
 
     @cherrypy.expose
-    def testNotifo(self, username=None, apisecret=None):
-        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
-
-        result = notifiers.notifo_notifier.test_notify(username, apisecret)
-        if result:
-            return "Notifo notification succeeded. Check your Notifo clients to make sure it worked"
-        else:
-            return "Error sending Notifo notification"
-
-    @cherrypy.expose
     def testBoxcar(self, username=None):
         cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
 
@@ -2836,8 +2825,28 @@ class Home:
 
 
     @cherrypy.expose
-    def shutdown(self, pid=None):
+    def testPushbullet(self, api=None):
+        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
 
+        result = notifiers.pushbullet_notifier.test_notify(api)
+        if result:
+            return "Pushbullet notification succeeded. Check your device to make sure it worked"
+        else:
+            return "Error sending Pushbullet notification"
+
+
+    @cherrypy.expose
+    def getPushbulletDevices(self, api=None):
+        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
+
+        result = notifiers.pushbullet_notifier.get_devices(api)
+        if result:
+            return result
+        else:
+            return "Error sending Pushbullet notification"
+
+    @cherrypy.expose    
+    def shutdown(self, pid=None):
 
         if str(pid) != str(sickbeard.PID):
             redirect("/home")
