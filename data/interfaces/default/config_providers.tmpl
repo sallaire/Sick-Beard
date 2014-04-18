@@ -99,7 +99,7 @@ var show_nzb_providers = #if $sickbeard.USE_NZBS then "true" else "false"#;
                                 <span class="component-title jumbo">Configure Provider:</span>
                                 <span class="component-desc">
                                     #set $provider_config_list = []
-                                    #for $cur_provider in ("omgwtfnzbs", "tvtorrents", "torrentleech", "btn", "binnewz", "t411", "tpi", "piratebay","gks"):
+                                    #for $cur_provider in ("omgwtfnzbs", "tvtorrents", "torrentleech", "btn", "binnewz", "t411", "tpi", "piratebay","gks","ethor"):
                                         #set $cur_provider_obj = $sickbeard.providers.getProviderClass($cur_provider)
                                         #if $cur_provider_obj.providerType == $GenericProvider.NZB and not $sickbeard.USE_NZBS:
                                         	#continue
@@ -200,6 +200,15 @@ Nothing to set up for this provider
                             </label>
                         </div>
                     </div><!-- /torrentleechDiv //-->
+                    
+                    <div class="providerDiv" id="ethorDiv">
+                        <div class="field-pair">
+                            <label class="clearfix">
+                                <span class="component-title">Ethor RSS key (get from RSS page):</span>
+                                <input class="component-desc" type="text" name="ethor_key" value="$sickbeard.ETHOR_KEY" size="40" />
+                            </label>
+                        </div>
+                    </div><!-- /ethorDiv //-->
 
                     <div class="providerDiv" id="t411Div">
                         <div class="field-pair">
