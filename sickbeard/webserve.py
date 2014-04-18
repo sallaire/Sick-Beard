@@ -1363,6 +1363,7 @@ class ConfigProviders:
                       btn_api_key=None,
                       newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,tpi_username=None,tpi_password=None, 
                       gks_key=None,
+                      ethor_key=None,
                       provider_order=None):
 
         results = []
@@ -1446,6 +1447,8 @@ class ConfigProviders:
                 sickbeard.THEPIRATEBAY = curEnabled
             elif curProvider == 'gks':
                 sickbeard.GKS = curEnabled
+            elif curProvider == 'ethor':
+                sickbeard.ETHOR = curEnabled
             elif curProvider in newznabProviderDict:
                 newznabProviderDict[curProvider].enabled = bool(curEnabled)
             else:
@@ -1455,6 +1458,8 @@ class ConfigProviders:
         sickbeard.TVTORRENTS_HASH = tvtorrents_hash.strip()
 
         sickbeard.TORRENTLEECH_KEY = torrentleech_key.strip()
+        
+        sickbeard.ETHOR_KEY = ethor_key.strip()
 
         sickbeard.BTN_API_KEY = btn_api_key.strip()
 
