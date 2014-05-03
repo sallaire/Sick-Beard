@@ -40,7 +40,7 @@ class CpasbienProvider(generic.TorrentProvider):
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         self.opener.addheaders=[('User-agent', 'Mozilla/5.0')]
         
-        self.url = "http://www.cpasbien.me"
+        self.url = "http://www.cpasbien.pe"
         
         
     def isEnabled(self):
@@ -99,7 +99,7 @@ class CpasbienProvider(generic.TorrentProvider):
 
             #downloadTorrentLink = torrentSoup.find("a", title.startswith('Cliquer'))
             tmp = pageURL.split('/')[6].replace('.html','.torrent')
-            downloadTorrentLink = ('http://www.cpasbien.me/_torrents/%s' % tmp)
+            downloadTorrentLink = ('http://www.cpasbien.pe/_torrents/%s' % tmp)
             if downloadTorrentLink:
                 
                 downloadURL = downloadTorrentLink
