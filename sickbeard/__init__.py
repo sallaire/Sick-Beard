@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, tpi, cpasbien, piratebay, gks, kat, ethor
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, cpasbien, piratebay, gks, kat, ethor
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -216,6 +216,10 @@ BINNEWZ = False
 T411 = False
 T411_USERNAME = None
 T411_PASSWORD = None
+
+FTDB = False
+FTDB_USERNAME = None
+FTDB_PASSWORD = None
 
 TPI = False
 TPI_USERNAME = None
@@ -450,6 +454,7 @@ def initialize(consoleLogging=True):
                 NZBS, NZBS_UID, NZBS_HASH, EZRSS, TVTORRENTS, TVTORRENTS_DIGEST, TVTORRENTS_HASH, BTN, BTN_API_KEY, TORRENTLEECH, TORRENTLEECH_KEY, ETHOR, ETHOR_KEY, TORRENT_DIR, USENET_RETENTION, SOCKET_TIMEOUT, \
 				BINNEWZ, \
                 T411, T411_USERNAME, T411_PASSWORD, \
+                FTDB, FTDB_USERNAME, FTDB_PASSWORD, \
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
                 Cpasbien, \
@@ -733,6 +738,11 @@ def initialize(consoleLogging=True):
         T411 = bool(check_setting_int(CFG, 'T411', 't411', 0))
         T411_USERNAME = check_setting_str(CFG, 'T411', 'username', '')
         T411_PASSWORD = check_setting_str(CFG, 'T411', 'password', '')
+        
+        CheckSection(CFG, 'FTDB')
+        FTDB = bool(check_setting_int(CFG, 'FTDB', 'ftdb', 0))
+        FTDB_USERNAME = check_setting_str(CFG, 'FTDB', 'username', '')
+        FTDB_PASSWORD = check_setting_str(CFG, 'FTDB', 'password', '')
         
         CheckSection(CFG, 'TPI')
         TPI = bool(check_setting_int(CFG, 'TPI', 'tpi', 0))
@@ -1454,6 +1464,11 @@ def save_config():
     new_config['T411']['t411'] = int(T411)
     new_config['T411']['username'] = T411_USERNAME
     new_config['T411']['password'] = T411_PASSWORD
+
+    new_config['FTDB'] = {}
+    new_config['FTDB']['ftdb'] = int(FTDB)
+    new_config['FTDB']['username'] = FTDB_USERNAME
+    new_config['FTDB']['password'] = FTDB_PASSWORD
 
     new_config['TPI'] = {}
     new_config['TPI']['tpi'] = int(TPI)
