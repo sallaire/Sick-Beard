@@ -99,7 +99,7 @@ var show_nzb_providers = #if $sickbeard.USE_NZBS then "true" else "false"#;
                                 <span class="component-title jumbo">Configure Provider:</span>
                                 <span class="component-desc">
                                     #set $provider_config_list = []
-                                    #for $cur_provider in ("omgwtfnzbs", "tvtorrents", "torrentleech", "btn", "binnewz", "t411", "tpi", "piratebay","gks","ethor"):
+                                    #for $cur_provider in ("omgwtfnzbs", "tvtorrents", "torrentleech", "btn", "binnewz", "t411", "ftdb", "tpi", "piratebay","gks","ethor"):
                                         #set $cur_provider_obj = $sickbeard.providers.getProviderClass($cur_provider)
                                         #if $cur_provider_obj.providerType == $GenericProvider.NZB and not $sickbeard.USE_NZBS:
                                         	#continue
@@ -224,6 +224,21 @@ Nothing to set up for this provider
                             </label>
                         </div>
                     </div><!-- /t411Div //-->
+
+                    <div class="providerDiv" id="ftdbDiv">
+                        <div class="field-pair">
+                            <label class="clearfix">
+                                <span class="component-title">FTDB User name:</span>
+                                <input class="component-desc" type="text" name="ftdb_username" value="$sickbeard.FTDB_USERNAME" size="40" />
+                            </label>
+                        </div>
+                        <div class="field-pair">
+                            <label class="clearfix">
+                                <span class="component-title">FTDB Password:</span>
+                                <input class="component-desc" type="text" name="ftdb_password" value="$sickbeard.FTDB_PASSWORD" size="40" />
+                            </label>
+                        </div>
+                    </div><!-- /ftdbDiv //-->
 
                     <div class="providerDiv" id="tpiDiv">
                         <div class="field-pair">
