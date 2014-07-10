@@ -24,7 +24,7 @@ import cookielib
 import sickbeard
 import urllib
 import urllib2
-import execjs
+from lib import execjs
 import json
 
 class FTDBProvider(generic.TorrentProvider):
