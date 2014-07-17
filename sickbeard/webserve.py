@@ -1364,6 +1364,7 @@ class ConfigProviders:
                       newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None, 
                       gks_key=None,
                       ethor_key=None,
+                      thinkgeek_key=None,
                       provider_order=None):
 
         results = []
@@ -1451,6 +1452,8 @@ class ConfigProviders:
                 sickbeard.GKS = curEnabled
             elif curProvider == 'ethor':
                 sickbeard.ETHOR = curEnabled
+            elif curProvider == 'thinkgeek':
+                sickbeard.thinkgeek = curEnabled    
             elif curProvider in newznabProviderDict:
                 newznabProviderDict[curProvider].enabled = bool(curEnabled)
             else:
@@ -1462,6 +1465,8 @@ class ConfigProviders:
         sickbeard.TORRENTLEECH_KEY = torrentleech_key.strip()
         
         sickbeard.ETHOR_KEY = ethor_key.strip()
+        
+        sickbeard.thinkgeek_KEY = thinkgeek_key.strip()
 
         sickbeard.BTN_API_KEY = btn_api_key.strip()
 
