@@ -140,16 +140,22 @@ class ADDICTProvider(generic.TorrentProvider):
 
         soup = BeautifulSoup( r, "html.parser" )
 
-        resultsTable = soup.find("table", { "class" : "lista" })
+        resultsTable = soup.find("table", { "class" : "lista" , "width":"100%" })
         if resultsTable:
 
             rows = resultsTable.findAll("tr")
-    
+            x=0
             for row in rows:
-
-                link = row.find("a", title=True,  href=re.compile('#comments') )
-                title = link['title'].replace("Voir les détails: ","")
-                
+              x=x+1
+              if (x > 1): 
+                #bypass first row because title only
+                columns = row.find('td')
+                numberOfColumns = len(columns.contents)
+                logger.log(u"ADDICT COL COUNT : " +  numberOfColumns, logger.DEBUG) 
+                 
+                link = row.findAll('td')[3].find("a", title=True)                
+                title = link['title']
+                title = title.replace("Voir les détails: ","")
 
                 downloadURL = row.find("a",href=re.compile("\.torrent"))['href']
                 
