@@ -49,27 +49,19 @@ class ADDICTProvider(generic.TorrentProvider):
         return sickbeard.ADDICT
     
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
-
-        results = []
+        results = []    
         if audio_lang == "en" and french==None:
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VOSTFR", 'cat': 0, 'incldead' : 0, 'lang' : 1  } ))
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VOSTFR", 'cat': 0, 'incldead' : 0, 'lang' : 2  } ))
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VO", 'cat': 0, 'incldead' : 0, 'lang' : 1  } ))
-            if not fullSeason: # there is a bug in ADDICT search, when selecting category Series Multi the search returns single episodes torrents even when we are looking for full season.
-               results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries Multi", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
-        elif audio_lang == "en" and french:
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VOSTFR", 'cat': 0, 'incldead' : 0, 'lang' : 1  } ))
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VOSTFR", 'cat': 0, 'incldead' : 0, 'lang' : 2  } ))
+             results.append( urllib.urlencode( {
+                'search': searchString                            
+            } ) + "&category=31%3B33%3B51" )
         elif audio_lang == "fr" or french:
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VF", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
-            if not fullSeason: # there is a bug in ADDICT search, when selecting category Series Multi the search returns single episodes torrents even when we are looking for full season.
-               results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries Multi", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
+            results.append( urllib.urlencode( {
+                'search': searchString
+            } ) + "&category=30%3B32%3B34")
         else:
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VOSTFR", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VO", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
-            if not fullSeason: # there is a bug in ADDICT search, when selecting category Series Multi the search returns single episodes torrents even when we are looking for full season.
-               results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries Multi", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
-            results.append( urllib.urlencode( {'search': searchString, 'parent_cat' : "Séries VF", 'cat': 0, 'incldead' : 0, 'lang' : 0  } ))
+            results.append( urllib.urlencode( {
+                'search': searchString
+            } ) + "&category=30%3B31%3B32%3B33%3B34%3B51%3B35")
         return results
         
     def _get_season_search_strings(self, show, season):
@@ -132,7 +124,7 @@ class ADDICTProvider(generic.TorrentProvider):
 
         results = []
         
-        searchUrl = self.url + '/index.php?page=torrents&active=1&category=30%3B31%3B32%3B33%3B34%3B51%3B35&search=' + searchString.replace('!','')
+        searchUrl = self.url + '/index.php?page=torrents&active=1&options=0&' + searchString.replace('!','')
  
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
         
@@ -151,22 +143,21 @@ class ADDICTProvider(generic.TorrentProvider):
                 #bypass first row because title only
                 columns = row.find('td')                            
                  
-                link = row.findAll('td')[2].find("a", title=True)                
-                title = link['title']
-                title = title.split("tails: ")[1]
-
-                downloadURL =  self.url + "/" + row.find("a",href=re.compile("\.torrent"))['href']
+                link = row.findAll('td')[1].find("a",  href=re.compile("torrent-details")) 
+                if link:               
+                   title = link.text
+                   logger.log(u"ADDICT TITLE TEMP: " + title, logger.DEBUG)                   
+                   downloadURL =  self.url + "/" + row.find("a",href=re.compile("\.torrent"))['href']              
                 
-                
-                quality = Quality.nameQuality( title )
-                if quality==Quality.UNKNOWN and title:
-                    if '720p' not in title.lower() and '1080p' not in title.lower():
+                   quality = Quality.nameQuality( title )
+                   if quality==Quality.UNKNOWN and title:
+                     if '720p' not in title.lower() and '1080p' not in title.lower():
                         quality=Quality.SDTV
-                if show and french==None:
-                    results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                elif show and french:
-                    results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                else:
+                   if show and french==None:
+                     results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                   elif show and french:
+                     results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                   else:
                     results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality ) )
         
         return results
