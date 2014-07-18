@@ -155,7 +155,7 @@ class ADDICTProvider(generic.TorrentProvider):
                 title = link['title']
                 title = title.split("tails: ")[1]
 
-                downloadURL = row.find("a",href=re.compile("\.torrent"))['href']
+                downloadURL =  self.url + "/" + row.find("a",href=re.compile("\.torrent"))['href']
                 
                 
                 quality = Quality.nameQuality( title )
