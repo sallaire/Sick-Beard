@@ -99,7 +99,7 @@ var show_nzb_providers = #if $sickbeard.USE_NZBS then "true" else "false"#;
                                 <span class="component-title jumbo">Configure Provider:</span>
                                 <span class="component-desc">
                                     #set $provider_config_list = []
-                                    #for $cur_provider in ("omgwtfnzbs", "tvtorrents", "torrentleech", "btn", "binnewz", "t411", "ftdb", "tpi", "piratebay","gks","ethor","thinkgeek"):
+                                    #for $cur_provider in ("omgwtfnzbs", "tvtorrents", "torrentleech", "btn", "binnewz", "t411", "ftdb", "addict", "tpi", "piratebay","gks","ethor","thinkgeek"):
                                         #set $cur_provider_obj = $sickbeard.providers.getProviderClass($cur_provider)
                                         #if $cur_provider_obj.providerType == $GenericProvider.NZB and not $sickbeard.USE_NZBS:
                                         	#continue
@@ -263,6 +263,21 @@ Nothing to set up for this provider
                             </label>
                         </div>
                     </div><!-- /tpiDiv //-->
+                    
+                    <div class="providerDiv" id="addictDiv">
+                        <div class="field-pair">
+                            <label class="clearfix">
+                                <span class="component-title">ADDICT User name:</span>
+                                <input class="component-desc" type="text" name="addict_username" value="$sickbeard.ADDICT_USERNAME" size="40" />
+                            </label>
+                        </div>
+                        <div class="field-pair">
+                            <label class="clearfix">
+                                <span class="component-title">ADDICT Password:</span>
+                                <input class="component-desc" type="text" name="addict_password" value="$sickbeard.ADDICT_PASSWORD" size="40" />
+                            </label>
+                        </div>
+                    </div><!-- /addictDiv //-->
 
                     <div class="providerDiv" id="btnDiv">
                         <div class="field-pair">
