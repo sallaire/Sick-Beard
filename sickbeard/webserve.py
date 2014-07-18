@@ -1361,9 +1361,10 @@ class ConfigProviders:
                       tvtorrents_digest=None, tvtorrents_hash=None,
                       torrentleech_key=None,
                       btn_api_key=None,
-                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None, 
+                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None, 
                       gks_key=None,
                       ethor_key=None,
+                      thinkgeek_key=None,
                       provider_order=None):
 
         results = []
@@ -1441,6 +1442,8 @@ class ConfigProviders:
                 sickbeard.FTDB = curEnabled
             elif curProvider == 'tpi':
                 sickbeard.TPI = curEnabled
+            elif curProvider == 'addict':
+                sickbeard.ADDICT = curEnabled                
             elif curProvider == 'cpasbien':
                 sickbeard.Cpasbien = curEnabled
             elif curProvider == 'kat':
@@ -1451,6 +1454,8 @@ class ConfigProviders:
                 sickbeard.GKS = curEnabled
             elif curProvider == 'ethor':
                 sickbeard.ETHOR = curEnabled
+            elif curProvider == 'thinkgeek':
+                sickbeard.thinkgeek = curEnabled    
             elif curProvider in newznabProviderDict:
                 newznabProviderDict[curProvider].enabled = bool(curEnabled)
             else:
@@ -1462,6 +1467,8 @@ class ConfigProviders:
         sickbeard.TORRENTLEECH_KEY = torrentleech_key.strip()
         
         sickbeard.ETHOR_KEY = ethor_key.strip()
+        
+        sickbeard.thinkgeek_KEY = thinkgeek_key.strip()
 
         sickbeard.BTN_API_KEY = btn_api_key.strip()
 
@@ -1473,6 +1480,9 @@ class ConfigProviders:
 
         sickbeard.TPI_USERNAME = tpi_username
         sickbeard.TPI_PASSWORD = tpi_password
+        
+        sickbeard.ADDICT_USERNAME = addict_username
+        sickbeard.ADDICT_PASSWORD = addict_password
 
         sickbeard.NZBSRUS_UID = nzbs_r_us_uid.strip()
         sickbeard.NZBSRUS_HASH = nzbs_r_us_hash.strip()

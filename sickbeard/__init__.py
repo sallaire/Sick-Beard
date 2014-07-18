@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, cpasbien, piratebay, gks, kat, ethor
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, addict, cpasbien, piratebay, gks, kat, ethor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -178,6 +178,9 @@ TORRENTLEECH_KEY = None
 ETHOR = False
 ETHOR_KEY = None
 
+thinkgeek = False
+thinkgeek_KEY = None
+
 BTN = False
 BTN_API_KEY = None
 
@@ -224,6 +227,10 @@ FTDB_PASSWORD = None
 TPI = False
 TPI_USERNAME = None
 TPI_PASSWORD = None
+
+ADDICT = False
+ADDICT_USERNAME = None
+ADDICT_PASSWORD = None
 
 THEPIRATEBAY = False
 THEPIRATEBAY_TRUSTED = True
@@ -451,11 +458,12 @@ def initialize(consoleLogging=True):
                 USE_PLEX, PLEX_NOTIFY_ONSNATCH, PLEX_NOTIFY_ONDOWNLOAD, PLEX_NOTIFY_ONSUBTITLEDOWNLOAD, PLEX_UPDATE_LIBRARY, \
                 PLEX_SERVER_HOST, PLEX_HOST, PLEX_USERNAME, PLEX_PASSWORD, \
                 showUpdateScheduler, __INITIALIZED__, LAUNCH_BROWSER, UPDATE_SHOWS_ON_START, SORT_ARTICLE, FRENCH_COLUMN, showList, loadingShowList, \
-                NZBS, NZBS_UID, NZBS_HASH, EZRSS, TVTORRENTS, TVTORRENTS_DIGEST, TVTORRENTS_HASH, BTN, BTN_API_KEY, TORRENTLEECH, TORRENTLEECH_KEY, ETHOR, ETHOR_KEY, TORRENT_DIR, USENET_RETENTION, SOCKET_TIMEOUT, \
+                NZBS, NZBS_UID, NZBS_HASH, EZRSS, TVTORRENTS, TVTORRENTS_DIGEST, TVTORRENTS_HASH, BTN, BTN_API_KEY, TORRENTLEECH, TORRENTLEECH_KEY, ETHOR, ETHOR_KEY,thinkgeek , thinkgeek_KEY, TORRENT_DIR, USENET_RETENTION, SOCKET_TIMEOUT, \
 				BINNEWZ, \
                 T411, T411_USERNAME, T411_PASSWORD, \
                 FTDB, FTDB_USERNAME, FTDB_PASSWORD, \
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
+                ADDICT, ADDICT_USERNAME, ADDICT_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
                 Cpasbien, \
                 kat, \
@@ -716,6 +724,11 @@ def initialize(consoleLogging=True):
         ETHOR = bool(check_setting_int(CFG, 'Ethor', 'ethor', 0))
         ETHOR_KEY = check_setting_str(CFG, 'Ethor', 'ethor_key', '')
 
+        CheckSection(CFG, 'thinkgeek')
+        thinkgeek = bool(check_setting_int(CFG, 'thinkgeek', 'thinkgeek', 0))
+        thinkgeek_KEY = check_setting_str(CFG, 'thinkgeek', 'thinkgeek_key', '')
+
+
         CheckSection(CFG, 'NZBs')
         NZBS = bool(check_setting_int(CFG, 'NZBs', 'nzbs', 0))
         NZBS_UID = check_setting_str(CFG, 'NZBs', 'nzbs_uid', '')
@@ -748,6 +761,11 @@ def initialize(consoleLogging=True):
         TPI = bool(check_setting_int(CFG, 'TPI', 'tpi', 0))
         TPI_USERNAME = check_setting_str(CFG, 'TPI', 'username', '')
         TPI_PASSWORD = check_setting_str(CFG, 'TPI', 'password', '')
+        
+        CheckSection(CFG, 'ADDICT')
+        TPI = bool(check_setting_int(CFG, 'ADDICT', 'addict', 0))
+        TPI_USERNAME = check_setting_str(CFG, 'ADDICT', 'username', '')
+        TPI_PASSWORD = check_setting_str(CFG, 'ADDICT', 'password', '')
         
         CheckSection(CFG, 'PirateBay')
         THEPIRATEBAY = bool(check_setting_int(CFG, 'PirateBay', 'piratebay', 0))
