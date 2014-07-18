@@ -149,13 +149,11 @@ class ADDICTProvider(generic.TorrentProvider):
               x=x+1
               if (x > 1): 
                 #bypass first row because title only
-                columns = row.find('td')
-                numberOfColumns = len(columns.contents)
-                logger.log(u"ADDICT COL COUNT : " +  numberOfColumns, logger.DEBUG) 
+                columns = row.find('td')                            
                  
-                link = row.findAll('td')[3].find("a", title=True)                
+                link = row.findAll('td')[2].find("a", title=True)                
                 title = link['title']
-                title = title.replace("Voir les détails: ","")
+                title = title.split("tails: ")[1]
 
                 downloadURL = row.find("a",href=re.compile("\.torrent"))['href']
                 
@@ -189,10 +187,7 @@ class ADDICTSearchResult:
         self.title = title
         self.url = url
         self.quality = quality
-        self.audio_langs=audio_langs
-        
-    def getNZB(self):
-        return self.opener.open( self.url , 'wb').read()
+        self.audio_langs=audio_langs         
 
     def getQuality(self):
         return self.quality
