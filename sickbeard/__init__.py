@@ -763,9 +763,9 @@ def initialize(consoleLogging=True):
         TPI_PASSWORD = check_setting_str(CFG, 'TPI', 'password', '')
         
         CheckSection(CFG, 'ADDICT')
-        TPI = bool(check_setting_int(CFG, 'ADDICT', 'addict', 0))
-        TPI_USERNAME = check_setting_str(CFG, 'ADDICT', 'username', '')
-        TPI_PASSWORD = check_setting_str(CFG, 'ADDICT', 'password', '')
+        ADDICT = bool(check_setting_int(CFG, 'ADDICT', 'addict', 0))
+        ADDICT_USERNAME = check_setting_str(CFG, 'ADDICT', 'username', '')
+        ADDICT_PASSWORD = check_setting_str(CFG, 'ADDICT', 'password', '')
         
         CheckSection(CFG, 'PirateBay')
         THEPIRATEBAY = bool(check_setting_int(CFG, 'PirateBay', 'piratebay', 0))
@@ -1454,6 +1454,10 @@ def save_config():
     new_config['Ethor'] = {}
     new_config['Ethor']['ethor'] = int(ETHOR)
     new_config['Ethor']['ethor_key'] = ETHOR_KEY
+    
+    new_config['Thinkgeek'] = {}
+    new_config['Thinkgeek']['thinkgeek'] = int(thinkgeek)
+    new_config['Thinkgeek']['thinkgeek_key'] = thinkgeek_KEY
 
     new_config['NZBs'] = {}
     new_config['NZBs']['nzbs'] = int(NZBS)
@@ -1492,6 +1496,11 @@ def save_config():
     new_config['TPI']['tpi'] = int(TPI)
     new_config['TPI']['username'] = TPI_USERNAME
     new_config['TPI']['password'] = TPI_PASSWORD
+    
+    new_config['ADDICT'] = {}
+    new_config['ADDICT']['addict'] = int(ADDICT)
+    new_config['ADDICT']['username'] = ADDICT_USERNAME
+    new_config['ADDICT']['password'] = ADDICT_PASSWORD
     
     new_config['Cpasbien'] = {}
     new_config['Cpasbien']['cpasbien'] = int(Cpasbien)
