@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, addict, cpasbien, piratebay, gks, kat, ethor, thinkgeek
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -231,6 +231,10 @@ TPI_PASSWORD = None
 ADDICT = False
 ADDICT_USERNAME = None
 ADDICT_PASSWORD = None
+
+FNT = False
+FNT_USERNAME = None
+FNT_PASSWORD = None
 
 THEPIRATEBAY = False
 THEPIRATEBAY_TRUSTED = True
@@ -464,6 +468,7 @@ def initialize(consoleLogging=True):
                 FTDB, FTDB_USERNAME, FTDB_PASSWORD, \
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
                 ADDICT, ADDICT_USERNAME, ADDICT_PASSWORD, \
+                FNT, FNT_USERNAME, FNT_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
                 Cpasbien, \
                 kat, \
@@ -766,6 +771,11 @@ def initialize(consoleLogging=True):
         ADDICT = bool(check_setting_int(CFG, 'ADDICT', 'addict', 0))
         ADDICT_USERNAME = check_setting_str(CFG, 'ADDICT', 'username', '')
         ADDICT_PASSWORD = check_setting_str(CFG, 'ADDICT', 'password', '')
+        
+        CheckSection(CFG, 'FNT')
+        FNT = bool(check_setting_int(CFG, 'FNT', 'fnt', 0))
+        FNT_USERNAME = check_setting_str(CFG, 'FNT', 'username', '')
+        FNT_PASSWORD = check_setting_str(CFG, 'FNT', 'password', '')
         
         CheckSection(CFG, 'PirateBay')
         THEPIRATEBAY = bool(check_setting_int(CFG, 'PirateBay', 'piratebay', 0))
@@ -1501,6 +1511,11 @@ def save_config():
     new_config['ADDICT']['addict'] = int(ADDICT)
     new_config['ADDICT']['username'] = ADDICT_USERNAME
     new_config['ADDICT']['password'] = ADDICT_PASSWORD
+    
+    new_config['FNT'] = {}
+    new_config['FNT']['fnt'] = int(FNT)
+    new_config['FNT']['username'] = FNT_USERNAME
+    new_config['FNT']['password'] = FNT_PASSWORD
     
     new_config['Cpasbien'] = {}
     new_config['Cpasbien']['cpasbien'] = int(Cpasbien)
