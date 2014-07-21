@@ -192,6 +192,7 @@ class XTHORSearchResult:
         self.audio_langs=audio_langs    
 
     def getNZB(self):
+        logger.log(u"XTHOR GETNZB URL : " + self.url, logger.DEBUG) 
         return self.opener.open( self.url , 'wb').read()             
 
     def getQuality(self):
