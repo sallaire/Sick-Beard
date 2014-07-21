@@ -1361,7 +1361,7 @@ class ConfigProviders:
                       tvtorrents_digest=None, tvtorrents_hash=None,
                       torrentleech_key=None,
                       btn_api_key=None,
-                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None, 
+                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None, 
                       gks_key=None,
                       ethor_key=None,
                       thinkgeek_key=None,
@@ -1443,7 +1443,9 @@ class ConfigProviders:
             elif curProvider == 'tpi':
                 sickbeard.TPI = curEnabled
             elif curProvider == 'addict':
-                sickbeard.ADDICT = curEnabled                
+                sickbeard.ADDICT = curEnabled 
+            elif curProvider == 'fnt':
+                sickbeard.FNT = curEnabled                    
             elif curProvider == 'cpasbien':
                 sickbeard.Cpasbien = curEnabled
             elif curProvider == 'kat':
@@ -1483,6 +1485,9 @@ class ConfigProviders:
         
         sickbeard.ADDICT_USERNAME = addict_username
         sickbeard.ADDICT_PASSWORD = addict_password
+        
+        sickbeard.FNT_USERNAME = fnt_username
+        sickbeard.FNT_PASSWORD = fnt_password
 
         sickbeard.NZBSRUS_UID = nzbs_r_us_uid.strip()
         sickbeard.NZBSRUS_HASH = nzbs_r_us_hash.strip()
