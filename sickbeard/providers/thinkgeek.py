@@ -154,8 +154,8 @@ class THINKGEEKProvider(generic.TorrentProvider):
                 if link:               
                    title = link.text
                    logger.log(u"THINKGEEK TITLE : " + title, logger.DEBUG)                   
-                   downloadURL = self.url + "/" + row.find("a",href=re.compile("action=download"))['href']            
-                
+                   downloadURL =  row.find("a",href=re.compile("action=download"))['href']            
+                   logger.log(u"THINKGEEK DOWNLOAD URL : " + title, logger.DEBUG) 
                    quality = Quality.nameQuality( title )
                    if quality==Quality.UNKNOWN and title:
                      if '720p' not in title.lower() and '1080p' not in title.lower():
