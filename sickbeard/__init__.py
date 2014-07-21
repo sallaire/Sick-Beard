@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, thinkgeek
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -178,9 +178,6 @@ TORRENTLEECH_KEY = None
 ETHOR = False
 ETHOR_KEY = None
 
-thinkgeek = False
-thinkgeek_KEY = None
-
 BTN = False
 BTN_API_KEY = None
 
@@ -235,6 +232,14 @@ ADDICT_PASSWORD = None
 FNT = False
 FNT_USERNAME = None
 FNT_PASSWORD = None
+
+XTHOR = False
+XTHOR_USERNAME = None
+XTHOR_PASSWORD = None
+
+THINKGEEK = False
+THINKGEEK_USERNAME = None
+THINKGEEK_PASSWORD = None
 
 THEPIRATEBAY = False
 THEPIRATEBAY_TRUSTED = True
@@ -462,13 +467,15 @@ def initialize(consoleLogging=True):
                 USE_PLEX, PLEX_NOTIFY_ONSNATCH, PLEX_NOTIFY_ONDOWNLOAD, PLEX_NOTIFY_ONSUBTITLEDOWNLOAD, PLEX_UPDATE_LIBRARY, \
                 PLEX_SERVER_HOST, PLEX_HOST, PLEX_USERNAME, PLEX_PASSWORD, \
                 showUpdateScheduler, __INITIALIZED__, LAUNCH_BROWSER, UPDATE_SHOWS_ON_START, SORT_ARTICLE, FRENCH_COLUMN, showList, loadingShowList, \
-                NZBS, NZBS_UID, NZBS_HASH, EZRSS, TVTORRENTS, TVTORRENTS_DIGEST, TVTORRENTS_HASH, BTN, BTN_API_KEY, TORRENTLEECH, TORRENTLEECH_KEY, ETHOR, ETHOR_KEY,thinkgeek , thinkgeek_KEY, TORRENT_DIR, USENET_RETENTION, SOCKET_TIMEOUT, \
+                NZBS, NZBS_UID, NZBS_HASH, EZRSS, TVTORRENTS, TVTORRENTS_DIGEST, TVTORRENTS_HASH, BTN, BTN_API_KEY, TORRENTLEECH, TORRENTLEECH_KEY, ETHOR, ETHOR_KEY, TORRENT_DIR, USENET_RETENTION, SOCKET_TIMEOUT, \
 				BINNEWZ, \
                 T411, T411_USERNAME, T411_PASSWORD, \
                 FTDB, FTDB_USERNAME, FTDB_PASSWORD, \
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
                 ADDICT, ADDICT_USERNAME, ADDICT_PASSWORD, \
                 FNT, FNT_USERNAME, FNT_PASSWORD, \
+                XTHOR, XTHOR_USERNAME, XTHOR_PASSWORD, \
+                THINKGEEK, THINKGEEK_USERNAME, THINKGEEK_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
                 Cpasbien, \
                 kat, \
@@ -729,10 +736,6 @@ def initialize(consoleLogging=True):
         ETHOR = bool(check_setting_int(CFG, 'Ethor', 'ethor', 0))
         ETHOR_KEY = check_setting_str(CFG, 'Ethor', 'ethor_key', '')
 
-        CheckSection(CFG, 'thinkgeek')
-        thinkgeek = bool(check_setting_int(CFG, 'thinkgeek', 'thinkgeek', 0))
-        thinkgeek_KEY = check_setting_str(CFG, 'thinkgeek', 'thinkgeek_key', '')
-
 
         CheckSection(CFG, 'NZBs')
         NZBS = bool(check_setting_int(CFG, 'NZBs', 'nzbs', 0))
@@ -776,6 +779,16 @@ def initialize(consoleLogging=True):
         FNT = bool(check_setting_int(CFG, 'FNT', 'fnt', 0))
         FNT_USERNAME = check_setting_str(CFG, 'FNT', 'username', '')
         FNT_PASSWORD = check_setting_str(CFG, 'FNT', 'password', '')
+        
+        CheckSection(CFG, 'XTHOR')
+        XTHOR = bool(check_setting_int(CFG, 'XTHOR', 'xthor', 0))
+        XTHOR_USERNAME = check_setting_str(CFG, 'XTHOR', 'username', '')
+        XTHOR_PASSWORD = check_setting_str(CFG, 'XTHOR', 'password', '')
+        
+        CheckSection(CFG, 'THINKGEEK')
+        THINKGEEK = bool(check_setting_int(CFG, 'THINKGEEK', 'thinkgeek', 0))
+        THINKGEEK_USERNAME = check_setting_str(CFG, 'THINKGEEK', 'username', '')
+        THINKGEEK_PASSWORD = check_setting_str(CFG, 'THINKGEEK', 'password', '')
         
         CheckSection(CFG, 'PirateBay')
         THEPIRATEBAY = bool(check_setting_int(CFG, 'PirateBay', 'piratebay', 0))
@@ -1465,10 +1478,6 @@ def save_config():
     new_config['Ethor']['ethor'] = int(ETHOR)
     new_config['Ethor']['ethor_key'] = ETHOR_KEY
     
-    new_config['Thinkgeek'] = {}
-    new_config['Thinkgeek']['thinkgeek'] = int(thinkgeek)
-    new_config['Thinkgeek']['thinkgeek_key'] = thinkgeek_KEY
-
     new_config['NZBs'] = {}
     new_config['NZBs']['nzbs'] = int(NZBS)
     new_config['NZBs']['nzbs_uid'] = NZBS_UID
@@ -1516,6 +1525,16 @@ def save_config():
     new_config['FNT']['fnt'] = int(FNT)
     new_config['FNT']['username'] = FNT_USERNAME
     new_config['FNT']['password'] = FNT_PASSWORD
+    
+    new_config['XTHOR'] = {}
+    new_config['XTHOR']['xthor'] = int(XTHOR)
+    new_config['XTHOR']['username'] = XTHOR_USERNAME
+    new_config['XTHOR']['password'] = XTHOR_PASSWORD
+    
+    new_config['THINKGEEK'] = {}
+    new_config['THINKGEEK']['thinkgeek'] = int(THINKGEEK)
+    new_config['THINKGEEK']['username'] = THINKGEEK_USERNAME
+    new_config['THINKGEEK']['password'] = THINKGEEK_PASSWORD
     
     new_config['Cpasbien'] = {}
     new_config['Cpasbien']['cpasbien'] = int(Cpasbien)

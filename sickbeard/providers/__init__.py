@@ -33,6 +33,7 @@ __all__ = ['ezrss',
            'gks',
            'kat',
            'ethor',
+           'xthor',
            'thinkgeek',
            ]
 
