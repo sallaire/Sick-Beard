@@ -54,19 +54,20 @@ class XTHORProvider(generic.TorrentProvider):
         if audio_lang == "en" and french==None:
              results.append( urllib.urlencode( {
                 'keywords': searchString  ,                                                         
-            } ) + "&cid=43,69" )
+            } ) + "&cid=43,69&[PARAMSTR]=" + searchString )
         elif audio_lang == "fr" or french:
             results.append( urllib.urlencode( {
                 'keywords': searchString
-            } ) + "&cid=42,41")
+            } ) + "&cid=42,41&[PARAMSTR]=" + searchString)
         else:
             results.append( urllib.urlencode( {
                 'keywords': searchString
-            } ) + "&cid=42,43,41,69")
-        if fullSeason:
-            results.append( urllib.urlencode( {
-                'keywords': searchString
-            } ) + "&cid=70")
+            } ) + "&cid=42,43,41,69&[PARAMSTR]=" + searchString)
+        #Désactivé car on ne peut pas savoir la langue
+        #if fullSeason:
+        #    results.append( urllib.urlencode( {
+        #        'keywords': searchString
+        #    } ) + "&cid=70&[PARAMSTR]=" + searchString)
         return results
         
     def _get_season_search_strings(self, show, season):
@@ -137,7 +138,7 @@ class XTHORProvider(generic.TorrentProvider):
             self._doLogin( sickbeard.XTHOR_USERNAME, sickbeard.XTHOR_PASSWORD )
 
         results = []
-        
+       
         searchUrl = self.url + '?p=torrents&pid=10&search_type=name&' + searchString.replace('!','')
  
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
@@ -157,19 +158,23 @@ class XTHORProvider(generic.TorrentProvider):
                                   
                 if link:               
                    title = link.text
-                   logger.log(u"XTHOR TITLE : " + title, logger.DEBUG)                   
-                   downloadURL =  row.find("a",href=re.compile("action=download"))['href']             
-                   logger.log(u"XTHOR DOWNLOAD URL : " + title, logger.DEBUG) 
-                   quality = Quality.nameQuality( title )
-                   if quality==Quality.UNKNOWN and title:
-                     if '720p' not in title.lower() and '1080p' not in title.lower():
-                        quality=Quality.SDTV
-                   if show and french==None:
-                     results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                   elif show and french:
-                     results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                   else:
-                    results.append( XTHORSearchResult( self.opener, title, downloadURL, quality ) )
+                   recherched=searchUrl.split("&[PARAMSTR]=")[1]
+                   recherched=recherched.replace(" ","(.*)")
+                   logger.log(u"XTHOR TITLE : " + title, logger.DEBUG)
+                   logger.log(u"XTHOR CHECK MATCH : " + recherched, logger.DEBUG)                                        
+                   if re.match(recherched,title , re.IGNORECASE):                                        
+                     downloadURL =  row.find("a",href=re.compile("action=download"))['href']             
+                     logger.log(u"XTHOR DOWNLOAD URL : " + downloadURL, logger.DEBUG) 
+                     quality = Quality.nameQuality( title )
+                     if quality==Quality.UNKNOWN and title:
+                       if '720p' not in title.lower() and '1080p' not in title.lower():
+                         quality=Quality.SDTV
+                     if show and french==None:
+                         results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                     elif show and french:
+                         results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                     else:
+                         results.append( XTHORSearchResult( self.opener, title, downloadURL, quality ) )
         
         return results
     
