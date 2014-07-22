@@ -1361,10 +1361,9 @@ class ConfigProviders:
                       tvtorrents_digest=None, tvtorrents_hash=None,
                       torrentleech_key=None,
                       btn_api_key=None,
-                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None, 
+                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None,xthor_username=None,xthor_password=None,thinkgeek_username=None,thinkgeek_password=None,   
                       gks_key=None,
-                      ethor_key=None,
-                      thinkgeek_key=None,
+                      ethor_key=None,                      
                       provider_order=None):
 
         results = []
@@ -1445,7 +1444,11 @@ class ConfigProviders:
             elif curProvider == 'addict':
                 sickbeard.ADDICT = curEnabled 
             elif curProvider == 'fnt':
-                sickbeard.FNT = curEnabled                    
+                sickbeard.FNT = curEnabled  
+            elif curProvider == 'xthor':
+                sickbeard.XTHOR = curEnabled  
+            elif curProvider == 'thinkgeek':
+                sickbeard.THINKGEEK = curEnabled                            
             elif curProvider == 'cpasbien':
                 sickbeard.Cpasbien = curEnabled
             elif curProvider == 'kat':
@@ -1455,9 +1458,7 @@ class ConfigProviders:
             elif curProvider == 'gks':
                 sickbeard.GKS = curEnabled
             elif curProvider == 'ethor':
-                sickbeard.ETHOR = curEnabled
-            elif curProvider == 'thinkgeek':
-                sickbeard.thinkgeek = curEnabled    
+                sickbeard.ETHOR = curEnabled                
             elif curProvider in newznabProviderDict:
                 newznabProviderDict[curProvider].enabled = bool(curEnabled)
             else:
@@ -1469,9 +1470,7 @@ class ConfigProviders:
         sickbeard.TORRENTLEECH_KEY = torrentleech_key.strip()
         
         sickbeard.ETHOR_KEY = ethor_key.strip()
-        
-        sickbeard.thinkgeek_KEY = thinkgeek_key.strip()
-
+            
         sickbeard.BTN_API_KEY = btn_api_key.strip()
 
         sickbeard.T411_USERNAME = t411_username
@@ -1488,6 +1487,12 @@ class ConfigProviders:
         
         sickbeard.FNT_USERNAME = fnt_username
         sickbeard.FNT_PASSWORD = fnt_password
+
+        sickbeard.XTHOR_USERNAME = xthor_username
+        sickbeard.XTHOR_PASSWORD = xthor_password
+        
+        sickbeard.THINKGEEK_USERNAME = thinkgeek_username
+        sickbeard.THINKGEEK_PASSWORD = thinkgeek_password
 
         sickbeard.NZBSRUS_UID = nzbs_r_us_uid.strip()
         sickbeard.NZBSRUS_HASH = nzbs_r_us_hash.strip()

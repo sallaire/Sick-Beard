@@ -29,40 +29,44 @@ import random
 import urllib2
 import re
 
-class THINKGEEKProvider(generic.TorrentProvider):
+class XTHORProvider(generic.TorrentProvider):
 
     def __init__(self):
         
-        generic.TorrentProvider.__init__(self, "THINKGEEK")
+        generic.TorrentProvider.__init__(self, "XTHOR")
 
         self.supportsBacklog = True
         
         self.cj = cookielib.CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         
-        self.url = "https://think-geek.net"
+        self.url = "https://xthor.bz"
         
         self.login_done = False
         self.failed_login_logged = False
         self.successful_login_logged = False
         
     def isEnabled(self):
-        return sickbeard.THINKGEEK
+        return sickbeard.XTHOR
     
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
         results = []    
         if audio_lang == "en" and french==None:
              results.append( urllib.urlencode( {
                 'keywords': searchString  ,                                                         
-            } ) + "&cid=34,62" )
+            } ) + "&cid=43,69" )
         elif audio_lang == "fr" or french:
             results.append( urllib.urlencode( {
                 'keywords': searchString
-            } ) + "&cid=33,61")
+            } ) + "&cid=42,41")
         else:
             results.append( urllib.urlencode( {
                 'keywords': searchString
-            } ) + "&cid=34,62,33,61")
+            } ) + "&cid=42,43,41,69")
+        if fullSeason:
+            results.append( urllib.urlencode( {
+                'keywords': searchString
+            } ) + "&cid=70")
         return results
         
     def _get_season_search_strings(self, show, season):
@@ -119,18 +123,18 @@ class THINKGEEKProvider(generic.TorrentProvider):
             if (cookie.name == "tsue_member"): self.login_done = True
                                 
         if not self.login_done and not self.failed_login_logged:
-            logger.log(u"Unable to login to THINKGEEK. Please check username and password.", logger.WARNING) 
+            logger.log(u"Unable to login to XTHOR. Please check username and password.", logger.WARNING) 
             self.failed_login_logged = True
         
         if self.login_done and not self.successful_login_logged:
-            logger.log(u"Login to THINKGEEK successful", logger.MESSAGE) 
+            logger.log(u"Login to XTHOR successful", logger.MESSAGE) 
             self.successful_login_logged = True        
 
     def _doSearch(self, searchString, show=None, season=None, french=None):
 
         
         if not self.login_done:
-            self._doLogin( sickbeard.THINKGEEK_USERNAME, sickbeard.THINKGEEK_PASSWORD )
+            self._doLogin( sickbeard.XTHOR_USERNAME, sickbeard.XTHOR_PASSWORD )
 
         results = []
         
@@ -142,30 +146,30 @@ class THINKGEEKProvider(generic.TorrentProvider):
 
         soup = BeautifulSoup( r, "html.parser" )
 
-        resultsTable = soup.find("div", { "id" : "content"  })
+        resultsTable = soup.find("table", { "id" : "torrents_table_classic"  })
         if resultsTable:
 
-            rows = resultsTable.findAll("div" , {"class" : "torrent-box"} )
+            rows = resultsTable.findAll("tr")
            
             for row in rows:
             
-                link = row.find("a",href=re.compile("action=details"))                                                       
+                link = row.find("a",href=re.compile("action=details"))                                                           
                                   
                 if link:               
                    title = link.text
-                   logger.log(u"THINKGEEK TITLE : " + title, logger.DEBUG)                   
-                   downloadURL =  row.find("a",href=re.compile("action=download"))['href']            
-                   logger.log(u"THINKGEEK DOWNLOAD URL : " + title, logger.DEBUG) 
+                   logger.log(u"XTHOR TITLE : " + title, logger.DEBUG)                   
+                   downloadURL =  row.find("a",href=re.compile("action=download"))['href']             
+                   logger.log(u"XTHOR DOWNLOAD URL : " + title, logger.DEBUG) 
                    quality = Quality.nameQuality( title )
                    if quality==Quality.UNKNOWN and title:
                      if '720p' not in title.lower() and '1080p' not in title.lower():
                         quality=Quality.SDTV
                    if show and french==None:
-                     results.append( THINKGEEKSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                     results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
                    elif show and french:
-                     results.append( THINKGEEKSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                     results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
                    else:
-                    results.append( THINKGEEKSearchResult( self.opener, title, downloadURL, quality ) )
+                    results.append( XTHORSearchResult( self.opener, title, downloadURL, quality ) )
         
         return results
     
@@ -178,7 +182,7 @@ class THINKGEEKProvider(generic.TorrentProvider):
 
         return result    
     
-class THINKGEEKSearchResult:
+class XTHORSearchResult:
     
     def __init__(self, opener, title, url, quality, audio_langs=None):
         self.opener = opener
@@ -188,9 +192,10 @@ class THINKGEEKSearchResult:
         self.audio_langs=audio_langs    
 
     def getNZB(self):
+        logger.log(u"XTHOR GETNZB URL : " + self.url, logger.DEBUG) 
         return self.opener.open( self.url , 'wb').read()             
 
     def getQuality(self):
         return self.quality
 
-provider = THINKGEEKProvider()
+provider = XTHORProvider()
