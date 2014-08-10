@@ -26,11 +26,15 @@ __all__ = ['ezrss',
            't411',
            'ftdb',
            'tpi',
+           'addict',
+           'fnt',
            'cpasbien',
            'piratebay',
            'gks',
            'kat',
            'ethor',
+           'xthor',
+           'thinkgeek',
            ]
 
 import sickbeard

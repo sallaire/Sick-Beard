@@ -109,7 +109,7 @@ Sick Beard makes use of the following projects:
 
 ## Dependencies
 
-To run Sick Beard from source you will need Python 2.5+ and Cheetah 2.1.0+. The [binary releases][googledownloads] are standalone.
+To run Sick Beard from source you will need Python 2.7 and Cheetah 2.1.0+. The [binary releases][googledownloads] are standalone.
 
 ## Bugs
 

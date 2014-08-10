@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, cpasbien, piratebay, gks, kat, ethor
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -224,6 +224,22 @@ FTDB_PASSWORD = None
 TPI = False
 TPI_USERNAME = None
 TPI_PASSWORD = None
+
+ADDICT = False
+ADDICT_USERNAME = None
+ADDICT_PASSWORD = None
+
+FNT = False
+FNT_USERNAME = None
+FNT_PASSWORD = None
+
+XTHOR = False
+XTHOR_USERNAME = None
+XTHOR_PASSWORD = None
+
+THINKGEEK = False
+THINKGEEK_USERNAME = None
+THINKGEEK_PASSWORD = None
 
 THEPIRATEBAY = False
 THEPIRATEBAY_TRUSTED = True
@@ -456,6 +472,10 @@ def initialize(consoleLogging=True):
                 T411, T411_USERNAME, T411_PASSWORD, \
                 FTDB, FTDB_USERNAME, FTDB_PASSWORD, \
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
+                ADDICT, ADDICT_USERNAME, ADDICT_PASSWORD, \
+                FNT, FNT_USERNAME, FNT_PASSWORD, \
+                XTHOR, XTHOR_USERNAME, XTHOR_PASSWORD, \
+                THINKGEEK, THINKGEEK_USERNAME, THINKGEEK_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
                 Cpasbien, \
                 kat, \
@@ -716,6 +736,7 @@ def initialize(consoleLogging=True):
         ETHOR = bool(check_setting_int(CFG, 'Ethor', 'ethor', 0))
         ETHOR_KEY = check_setting_str(CFG, 'Ethor', 'ethor_key', '')
 
+
         CheckSection(CFG, 'NZBs')
         NZBS = bool(check_setting_int(CFG, 'NZBs', 'nzbs', 0))
         NZBS_UID = check_setting_str(CFG, 'NZBs', 'nzbs_uid', '')
@@ -748,6 +769,26 @@ def initialize(consoleLogging=True):
         TPI = bool(check_setting_int(CFG, 'TPI', 'tpi', 0))
         TPI_USERNAME = check_setting_str(CFG, 'TPI', 'username', '')
         TPI_PASSWORD = check_setting_str(CFG, 'TPI', 'password', '')
+        
+        CheckSection(CFG, 'ADDICT')
+        ADDICT = bool(check_setting_int(CFG, 'ADDICT', 'addict', 0))
+        ADDICT_USERNAME = check_setting_str(CFG, 'ADDICT', 'username', '')
+        ADDICT_PASSWORD = check_setting_str(CFG, 'ADDICT', 'password', '')
+        
+        CheckSection(CFG, 'FNT')
+        FNT = bool(check_setting_int(CFG, 'FNT', 'fnt', 0))
+        FNT_USERNAME = check_setting_str(CFG, 'FNT', 'username', '')
+        FNT_PASSWORD = check_setting_str(CFG, 'FNT', 'password', '')
+        
+        CheckSection(CFG, 'XTHOR')
+        XTHOR = bool(check_setting_int(CFG, 'XTHOR', 'xthor', 0))
+        XTHOR_USERNAME = check_setting_str(CFG, 'XTHOR', 'username', '')
+        XTHOR_PASSWORD = check_setting_str(CFG, 'XTHOR', 'password', '')
+        
+        CheckSection(CFG, 'THINKGEEK')
+        THINKGEEK = bool(check_setting_int(CFG, 'THINKGEEK', 'thinkgeek', 0))
+        THINKGEEK_USERNAME = check_setting_str(CFG, 'THINKGEEK', 'username', '')
+        THINKGEEK_PASSWORD = check_setting_str(CFG, 'THINKGEEK', 'password', '')
         
         CheckSection(CFG, 'PirateBay')
         THEPIRATEBAY = bool(check_setting_int(CFG, 'PirateBay', 'piratebay', 0))
@@ -1436,7 +1477,7 @@ def save_config():
     new_config['Ethor'] = {}
     new_config['Ethor']['ethor'] = int(ETHOR)
     new_config['Ethor']['ethor_key'] = ETHOR_KEY
-
+    
     new_config['NZBs'] = {}
     new_config['NZBs']['nzbs'] = int(NZBS)
     new_config['NZBs']['nzbs_uid'] = NZBS_UID
@@ -1474,6 +1515,26 @@ def save_config():
     new_config['TPI']['tpi'] = int(TPI)
     new_config['TPI']['username'] = TPI_USERNAME
     new_config['TPI']['password'] = TPI_PASSWORD
+    
+    new_config['ADDICT'] = {}
+    new_config['ADDICT']['addict'] = int(ADDICT)
+    new_config['ADDICT']['username'] = ADDICT_USERNAME
+    new_config['ADDICT']['password'] = ADDICT_PASSWORD
+    
+    new_config['FNT'] = {}
+    new_config['FNT']['fnt'] = int(FNT)
+    new_config['FNT']['username'] = FNT_USERNAME
+    new_config['FNT']['password'] = FNT_PASSWORD
+    
+    new_config['XTHOR'] = {}
+    new_config['XTHOR']['xthor'] = int(XTHOR)
+    new_config['XTHOR']['username'] = XTHOR_USERNAME
+    new_config['XTHOR']['password'] = XTHOR_PASSWORD
+    
+    new_config['THINKGEEK'] = {}
+    new_config['THINKGEEK']['thinkgeek'] = int(THINKGEEK)
+    new_config['THINKGEEK']['username'] = THINKGEEK_USERNAME
+    new_config['THINKGEEK']['password'] = THINKGEEK_PASSWORD
     
     new_config['Cpasbien'] = {}
     new_config['Cpasbien']['cpasbien'] = int(Cpasbien)
