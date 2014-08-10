@@ -24,7 +24,7 @@ import cookielib
 import sickbeard
 import urllib
 import urllib2
-import execjs
+import re
 import json
 
 class FTDBProvider(generic.TorrentProvider):
@@ -91,6 +91,45 @@ class FTDBProvider(generic.TorrentProvider):
     def getQuality(self, item):
         return item.getQuality()
 
+    def _getSecureLogin(self, challenges):
+
+        def fromCharCode(*args):
+            return ''.join(map(unichr, args))
+
+        def decodeString(p, a, c, k, e, d):
+            a = int(a)
+            c = int(c)
+            def e(c):
+                if c < a:
+                    f = ''
+                else:
+                    f = e(c / a)
+                return f + fromCharCode(c % a + 161)
+            while c:
+                c -= 1
+                if k[c]:
+                    regex = re.compile(e(c))
+                    p = re.sub(regex, k[c], p)
+            return p
+
+        def decodeChallenge(challenge):
+            challenge      = urllib2.unquote(challenge)
+            regexGetArgs   = re.compile('\'([^\']+)\',([0-9]+),([0-9]+),\'([^\']+)\'')
+            regexIsEncoded = re.compile('decodeURIComponent')
+            regexUnquote   = re.compile('\'')
+            if (challenge == 'a'):
+                return '05f'
+            if (re.match(regexIsEncoded, challenge) == None):
+                return re.sub(regexUnquote, '', challenge)
+            args = re.findall(regexGetArgs, challenge)
+            decoded = decodeString(args[0][0], args[0][1], args[0][2], args[0][3].split('|'), 0, {})
+            return urllib2.unquote(decoded.decode('utf8'))
+
+        secureLogin = ''
+        for challenge in challenges:
+            secureLogin += decodeChallenge(challenge)
+        return secureLogin
+
     def _doLogin(self, login, password):
 
         challenge = self.opener.open(self.url + '/?section=LOGIN&challenge=1')
@@ -99,22 +138,10 @@ class FTDBProvider(generic.TorrentProvider):
 
         data = json.loads(rawData)
 
-        # JavaScript code from the login page (needed to decrypt the challenge code)
-        ctx = execjs.compile("""
-            var a = '05f';
-            function e(challenge){
-                var s = ''
-                for (var i in challenge){
-                    s += '' + eval(challenge[i])
-                }
-                return s
-            }
-        """)
-
         data = urllib.urlencode({
             'username'    : login,
             'password'    : password,
-            'secure_login': ctx.call('e', data['challenge']),
+            'secure_login': self._getSecureLogin(data['challenge']),
             'hash'        : data['hash']
         })
 
