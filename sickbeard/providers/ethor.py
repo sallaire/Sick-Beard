@@ -1,5 +1,5 @@
 # Author: Julien Goret <jgoret@gmail.com>
-# URL: https://github.com/jymannob/Sick-Beard
+# URL: https://github.com/sarakha63/Sick-Beard
 #
 # This file is based upon tvtorrents.py.
 #
