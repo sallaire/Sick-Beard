@@ -58,7 +58,7 @@ class PushbulletNotifier:
         if method == 'POST':
             uri = '/v2/pushes'
         else:
-            uri = '/api/devices'
+            uri = '/v2/devices'
         
         logger.log(u"Pushbullet event: " + str(event), logger.DEBUG)
         logger.log(u"Pushbullet message: " + str(message), logger.DEBUG)
@@ -72,7 +72,7 @@ class PushbulletNotifier:
             testMessage = True
             try:
                 logger.log(u"Testing Pushbullet authentication and retrieving the device list.", logger.DEBUG)
-                http_handler.request(method, uri, None, headers={'Authorization':'Bearer %s' % pushbullet_api})
+                http_handler.request(method, uri, None, headers={'Content-Type': 'application/json', 'Authorization':'Bearer %s' % pushbullet_api})
             except (SSLError, HTTPException):
                 logger.log(u"Pushbullet notification failed.", logger.ERROR)
                 return False
@@ -84,7 +84,7 @@ class PushbulletNotifier:
                     'body': message.encode('utf-8'),
                     'device_iden': pushbullet_device,
                     'type': notificationType}
-                http_handler.request(method, uri, body = urlencode(data), headers={'Authorization':'Bearer %s' % pushbullet_api})
+                http_handler.request(method, uri, body = urlencode(data), headers={'Content-Type': 'application/json', 'Authorization':'Bearer %s' % pushbullet_api})
                 pass
             except (SSLError, HTTPException):
                 return False
