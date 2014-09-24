@@ -68,13 +68,11 @@ class PushbulletNotifier:
         
         http_handler = HTTPSConnection("api.pushbullet.com")
 
-        authString = base64.encodestring('%s:' % (pushbullet_api)).replace('\n', '')
-
         if notificationType == None:
             testMessage = True
             try:
                 logger.log(u"Testing Pushbullet authentication and retrieving the device list.", logger.DEBUG)
-                http_handler.request(method, uri, None, headers={'Authorization':'Basic %s:' % authString})
+                http_handler.request(method, uri, None, headers={'Authorization':'Bearer %s' % pushbullet_api})
             except (SSLError, HTTPException):
                 logger.log(u"Pushbullet notification failed.", logger.ERROR)
                 return False
@@ -86,7 +84,7 @@ class PushbulletNotifier:
                     'body': message.encode('utf-8'),
                     'device_iden': pushbullet_device,
                     'type': notificationType}
-                http_handler.request(method, uri, body = urlencode(data), headers={'Authorization':'Basic %s' % authString})
+                http_handler.request(method, uri, body = urlencode(data), headers={'Authorization':'Bearer %s' % pushbullet_api})
                 pass
             except (SSLError, HTTPException):
                 return False
