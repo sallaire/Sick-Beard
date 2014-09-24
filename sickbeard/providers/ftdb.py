@@ -51,7 +51,7 @@ class FTDBProvider(generic.TorrentProvider):
                 'name': searchString,
                 'exact' : 1,
                 'group': subcat
-            } ) + "&adv_cat%5Bs%5D%5B3%5D=101&adv_cat%5Bs%5D%5B4%5D=191&adv_cat%5Bs%5D%5B5%5D=197"
+            } ) + "&adv_cat%5Bs%5D%5B3%5D=101&adv_cat%5Bs%5D%5B4%5D=191"
         elif audio_lang == "fr" or french:
             return urllib.urlencode( {
                 'name': searchString,
