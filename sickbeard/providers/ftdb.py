@@ -71,7 +71,7 @@ class FTDBProvider(generic.TorrentProvider):
         showNames = list(set(showNam))
         results = []
         for showName in showNames:
-            results.append( self.getSearchParams(showName, show.audio_lang, 'series' ) + "&season=" + season)
+            results.append( self.getSearchParams(showName, show.audio_lang, 'series' ) + "&season=" + str(season))
         return results
 
     def _get_episode_search_strings(self, ep_obj, french=None):
