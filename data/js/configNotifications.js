@@ -47,6 +47,22 @@ $(document).ready(function () {
             function (data) { $('#testBoxcar-result').html(data); });
     });
 
+    $("#testBoxcar2").click(function () {
+        var boxcar2_access_token = $.trim($("#boxcar2_access_token").val());
+        var boxcar2_sound = $("#boxcar2_sound").val() || "default";
+        if (!boxcar2_access_token) {
+            $("#testBoxcar2-result").html("Please fill out the necessary fields above.");
+            return;
+        }
+        $(this).prop("disabled", true);
+        $("#testBoxcar2-result").html(loading);
+        $.get(sbRoot + "/home/testBoxcar2", {'accessToken': boxcar2_access_token, 'sound': boxcar2_sound})
+            .done(function (data) {
+                $("#testBoxcar2-result").html(data);
+                $("#testBoxcar2").prop("disabled", false);
+            });
+    });
+
     $('#testPushover').click(function () {
         $('#testPushover-result').html(loading);
         var pushover_userkey = $("#pushover_userkey").val();
