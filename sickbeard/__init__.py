@@ -911,6 +911,7 @@ def initialize(consoleLogging=True):
         USE_BOXCAR2 = bool(check_setting_int(CFG, 'Boxcar2', 'use_boxcar2', 0))
         BOXCAR2_NOTIFY_ONSNATCH = bool(check_setting_int(CFG, 'Boxcar2', 'boxcar2_notify_onsnatch', 0))
         BOXCAR2_NOTIFY_ONDOWNLOAD = bool(check_setting_int(CFG, 'Boxcar2', 'boxcar2_notify_ondownload', 0))
+        BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD = bool(check_setting_int(CFG, 'Boxcar2', 'boxcar2_notify_onsubtitledownload', 0))
         BOXCAR2_ACCESS_TOKEN = check_setting_str(CFG, 'Boxcar2', 'boxcar2_access_token', '')
         BOXCAR2_SOUND = check_setting_str(CFG, 'Boxcar2', 'boxcar2_sound', 'default')
 
@@ -1660,6 +1661,7 @@ def save_config():
     new_config['Boxcar2']['use_boxcar2'] = int(USE_BOXCAR2)
     new_config['Boxcar2']['boxcar2_notify_onsnatch'] = int(BOXCAR2_NOTIFY_ONSNATCH)
     new_config['Boxcar2']['boxcar2_notify_ondownload'] = int(BOXCAR2_NOTIFY_ONDOWNLOAD)
+    new_config['Boxcar2']['boxcar2_notify_onsubtitledownload'] = int(BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD)
     new_config['Boxcar2']['boxcar2_access_token'] = BOXCAR2_ACCESS_TOKEN
     new_config['Boxcar2']['boxcar2_sound'] = BOXCAR2_SOUND
 
