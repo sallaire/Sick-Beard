@@ -793,9 +793,9 @@ def initialize(consoleLogging=True):
         FNT_PASSWORD = check_setting_str(CFG, 'FNT', 'password', '')
         
         CheckSection(CFG, 'LIBERTALIA')
-        FNT = bool(check_setting_int(CFG, 'LIBERTALIA', 'libertalia', 0))
-        FNT_USERNAME = check_setting_str(CFG, 'LIBERTALIA', 'username', '')
-        FNT_PASSWORD = check_setting_str(CFG, 'LIBERTALIA', 'password', '')
+        LIBERTALIA = bool(check_setting_int(CFG, 'LIBERTALIA', 'libertalia', 0))
+        LIBERTALIA_USERNAME = check_setting_str(CFG, 'LIBERTALIA', 'username', '')
+        LIBERTALIA_PASSWORD = check_setting_str(CFG, 'LIBERTALIA', 'password', '')
         
         CheckSection(CFG, 'XTHOR')
         XTHOR = bool(check_setting_int(CFG, 'XTHOR', 'xthor', 0))
