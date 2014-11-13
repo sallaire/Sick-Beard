@@ -157,7 +157,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 if link:               
                    title = link.text
                    logger.log(u"LIBERTALIA TITLE TEMP: " + title, logger.DEBUG)                   
-                   'downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']              
+                   #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']              
                    downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']
                 
                    quality = Quality.nameQuality( title )
