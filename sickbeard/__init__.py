@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, libertalia, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -232,6 +232,10 @@ ADDICT_PASSWORD = None
 FNT = False
 FNT_USERNAME = None
 FNT_PASSWORD = None
+
+LIBERTALIA = False
+LIBERTALIA_USERNAME = None
+LIBERTALIA_PASSWORD = None
 
 XTHOR = False
 XTHOR_USERNAME = None
@@ -480,6 +484,7 @@ def initialize(consoleLogging=True):
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
                 ADDICT, ADDICT_USERNAME, ADDICT_PASSWORD, \
                 FNT, FNT_USERNAME, FNT_PASSWORD, \
+                LIBERTALIA, LIBERTALIA_USERNAME, LIBERTALIA_PASSWORD, \
                 XTHOR, XTHOR_USERNAME, XTHOR_PASSWORD, \
                 THINKGEEK, THINKGEEK_USERNAME, THINKGEEK_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
@@ -786,6 +791,11 @@ def initialize(consoleLogging=True):
         FNT = bool(check_setting_int(CFG, 'FNT', 'fnt', 0))
         FNT_USERNAME = check_setting_str(CFG, 'FNT', 'username', '')
         FNT_PASSWORD = check_setting_str(CFG, 'FNT', 'password', '')
+        
+        CheckSection(CFG, 'LIBERTALIA')
+        FNT = bool(check_setting_int(CFG, 'LIBERTALIA', 'libertalia', 0))
+        FNT_USERNAME = check_setting_str(CFG, 'LIBERTALIA', 'username', '')
+        FNT_PASSWORD = check_setting_str(CFG, 'LIBERTALIA', 'password', '')
         
         CheckSection(CFG, 'XTHOR')
         XTHOR = bool(check_setting_int(CFG, 'XTHOR', 'xthor', 0))
@@ -1539,6 +1549,11 @@ def save_config():
     new_config['FNT']['fnt'] = int(FNT)
     new_config['FNT']['username'] = FNT_USERNAME
     new_config['FNT']['password'] = FNT_PASSWORD
+    
+    new_config['LIBERTALIA'] = {}
+    new_config['LIBERTALIA']['libertalia'] = int(FNT)
+    new_config['LIBERTALIA']['username'] = LIBERTALIA_USERNAME
+    new_config['LIBERTALIA']['password'] = LIBERTALIA_PASSWORD
     
     new_config['XTHOR'] = {}
     new_config['XTHOR']['xthor'] = int(XTHOR)
