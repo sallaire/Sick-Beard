@@ -1551,7 +1551,7 @@ def save_config():
     new_config['FNT']['password'] = FNT_PASSWORD
     
     new_config['LIBERTALIA'] = {}
-    new_config['LIBERTALIA']['libertalia'] = int(FNT)
+    new_config['LIBERTALIA']['libertalia'] = int(LIBERTALIA)
     new_config['LIBERTALIA']['username'] = LIBERTALIA_USERNAME
     new_config['LIBERTALIA']['password'] = LIBERTALIA_PASSWORD
     
