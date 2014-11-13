@@ -54,15 +54,15 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         if audio_lang == "en" and french==None:
              results.append( urllib.urlencode( {
                 'name': searchString                            
-            } ) + "&cat[]=9" )
+            } ) + "&cat%5B%5D=9" )
         elif audio_lang == "fr" or french:
             results.append( urllib.urlencode( {
                 'name': searchString
-            } ) + "&cat[]=9")
+            } ) + "&cat%5B%5D=9")
         else:
             results.append( urllib.urlencode( {
                 'name': searchString
-            } ) + "&cat[]=9")
+            } ) + "&cat%5B%5D=9")
         return results
         
     def _get_season_search_strings(self, show, season):
@@ -145,15 +145,15 @@ class LIBERTALIAProvider(generic.TorrentProvider):
 
         resultsTable = soup.find("table", { "class" : "torrent_table"  })
         if resultsTable:
-
-            rows = resultsTable.findAll("tr")
+            #logger.log(u"LIBERTALIA found resulttable ! " , logger.DEBUG)  
+            rows = resultsTable.findAll("tr" ,  {"class" : "torrent_row new"}  )  # torrent_row new
             
             for row in rows:
                            
-                #bypass first row because title only
-                columns = row.find('td')                            
-                 
-                link = row.findAll('td')[1].find("a",  href=re.compile("torrents.php?id=")) 
+                #bypass first row because title only  
+                columns = row.find('td', {"class" : "torrent_name"} )                            
+                #logger.log(u"LIBERTALIA found rows ! " , logger.DEBUG) 
+                link = columns.find("a",  href=re.compile("torrents")) 
                 if link:               
                    title = link.text
                    logger.log(u"LIBERTALIA TITLE TEMP: " + title, logger.DEBUG)                   
