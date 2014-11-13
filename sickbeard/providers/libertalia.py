@@ -54,11 +54,11 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         if audio_lang == "en" and french==None:
              results.append( urllib.urlencode( {
                 'name': searchString                            
-            } ) + "&cat%5B%5D=9" )
+            } ) + "*VO*&cat%5B%5D=9" )
         elif audio_lang == "fr" or french:
             results.append( urllib.urlencode( {
                 'name': searchString
-            } ) + "&cat%5B%5D=9")
+            } ) + "*FRENCH*&cat%5B%5D=9")
         else:
             results.append( urllib.urlencode( {
                 'name': searchString
