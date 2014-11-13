@@ -64,7 +64,7 @@ def _downloadResult(result):
     elif result.resultType == "nzbdata":
         
         # get the final file path to the nzb
-        fileName = ek.ek(os.path.join, sickbeard.NZB_DIR, result.name + ".nzb")
+        fileName = ek.ek(os.path.join, sickbeard.NZB_DIR, helpers.sanitizeFileName(result.name) + ".nzb")
 
         logger.log(u"Saving NZB to " + fileName)
 
@@ -83,7 +83,7 @@ def _downloadResult(result):
     elif result.resultType == "torrentdata":
         
         # get the final file path to the nzb
-        fileName = ek.ek(os.path.join, sickbeard.TORRENT_DIR, result.name + ".torrent")
+        fileName = ek.ek(os.path.join, sickbeard.TORRENT_DIR, helpers.sanitizeFileName(result.name) + ".torrent")
 
         logger.log(u"Saving Torrent to " + fileName)
 

@@ -99,7 +99,9 @@ class CpasbienProvider(generic.TorrentProvider):
 
             #downloadTorrentLink = torrentSoup.find("a", title.startswith('Cliquer'))
             tmp = pageURL.split('/')[6].replace('.html','.torrent')
+
             downloadTorrentLink = ('http://www.cpasbien.pe/_torrents/%s' % tmp)
+
             if downloadTorrentLink:
                 
                 downloadURL = downloadTorrentLink

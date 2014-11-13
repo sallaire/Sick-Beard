@@ -18,9 +18,10 @@
 # along with Sick Beard. If not, see <http://www.gnu.org/licenses/>.
 
 
+import socket
 import base64
 from httplib import HTTPSConnection, HTTPException
-from urllib import urlencode
+import json
 from ssl import SSLError
 import sickbeard
 from sickbeard import logger, common
@@ -48,34 +49,32 @@ class PushbulletNotifier:
     def _sendPushbullet(self, pushbullet_api=None, pushbullet_device=None, event=None, message=None, notificationType=None, method=None, force=False):
         
         if not sickbeard.USE_PUSHBULLET and not force:
-                return False
-        
+            return False
+
         if pushbullet_api == None:
             pushbullet_api = sickbeard.PUSHBULLET_API
         if pushbullet_device == None:
             pushbullet_device = sickbeard.PUSHBULLET_DEVICE
 
         if method == 'POST':
-            uri = '/api/pushes'
+            uri = '/v2/pushes'
         else:
-            uri = '/api/devices'
-        
+            uri = '/v2/devices'
+
         logger.log(u"Pushbullet event: " + str(event), logger.DEBUG)
         logger.log(u"Pushbullet message: " + str(message), logger.DEBUG)
         logger.log(u"Pushbullet api: " + str(pushbullet_api), logger.DEBUG)
         logger.log(u"Pushbullet devices: " + str(pushbullet_device), logger.DEBUG)
         logger.log(u"Pushbullet notification type: " + str(notificationType), logger.DEBUG)
-        
-        http_handler = HTTPSConnection("api.pushbullet.com")
 
-        authString = base64.encodestring('%s:' % (pushbullet_api)).replace('\n', '')
+        http_handler = HTTPSConnection("api.pushbullet.com")
 
         if notificationType == None:
             testMessage = True
             try:
                 logger.log(u"Testing Pushbullet authentication and retrieving the device list.", logger.DEBUG)
-                http_handler.request(method, uri, None, headers={'Authorization':'Basic %s:' % authString})
-            except (SSLError, HTTPException):
+                http_handler.request(method, uri, None, headers={'Authorization': 'Bearer %s' % pushbullet_api})
+            except (SSLError, HTTPException, socket.error):
                 logger.log(u"Pushbullet notification failed.", logger.ERROR)
                 return False
         else:
@@ -86,27 +85,30 @@ class PushbulletNotifier:
                     'body': message.encode('utf-8'),
                     'device_iden': pushbullet_device,
                     'type': notificationType}
-                http_handler.request(method, uri, body = urlencode(data), headers={'Authorization':'Basic %s' % authString})
+                data = json.dumps(data)
+                http_handler.request(method, uri, body=data,
+                                     headers={'Content-Type': 'application/json', 'Authorization': 'Bearer %s' % pushbullet_api})
                 pass
-            except (SSLError, HTTPException):
+            except (SSLError, HTTPException, socket.error):
                 return False
 
         response = http_handler.getresponse()
         request_body = response.read()
         request_status = response.status
+        logger.log(u"Pushbullet response: %s" % request_body, logger.DEBUG)
 
         if request_status == 200:
-                if testMessage:
-                    return request_body
-                else:
-                    logger.log(u"Pushbullet notifications sent.", logger.DEBUG)
-                    return True
+            if testMessage:
+                return request_body
+            else:
+                logger.log(u"Pushbullet notifications sent.", logger.DEBUG)
+                return True
         elif request_status == 410:
-                logger.log(u"Pushbullet auth failed: %s" % response.reason, logger.ERROR)
-                return False
+            logger.log(u"Pushbullet auth failed: %s" % response.reason, logger.ERROR)
+            return False
         else:
-                logger.log(u"Pushbullet notification failed.", logger.ERROR)
-                return False
-                
-notifier = PushbulletNotifier
+            logger.log(u"Pushbullet notification failed.", logger.ERROR)
+            return False
 
+
+notifier = PushbulletNotifier

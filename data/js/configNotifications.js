@@ -47,6 +47,22 @@ $(document).ready(function () {
             function (data) { $('#testBoxcar-result').html(data); });
     });
 
+    $("#testBoxcar2").click(function () {
+        var boxcar2_access_token = $.trim($("#boxcar2_access_token").val());
+        var boxcar2_sound = $("#boxcar2_sound").val() || "default";
+        if (!boxcar2_access_token) {
+            $("#testBoxcar2-result").html("Please fill out the necessary fields above.");
+            return;
+        }
+        $(this).prop("disabled", true);
+        $("#testBoxcar2-result").html(loading);
+        $.get(sbRoot + "/home/testBoxcar2", {'accessToken': boxcar2_access_token, 'sound': boxcar2_sound})
+            .done(function (data) {
+                $("#testBoxcar2-result").html(data);
+                $("#testBoxcar2").prop("disabled", false);
+            });
+    });
+
     $('#testPushover').click(function () {
         $('#testPushover-result').html(loading);
         var pushover_userkey = $("#pushover_userkey").val();
@@ -237,10 +253,12 @@ $(document).ready(function () {
                 var devices = jQuery.parseJSON(data).devices;
                 $("#pushbullet_device_list").html('');
                 for (var i = 0; i < devices.length; i++) {
-                    if(current_pushbullet_device == devices[i].iden) {
-                        $("#pushbullet_device_list").append('<option value="'+devices[i].iden+'" selected>' + devices[i].extras.model + '</option>')
-                    } else {
-                        $("#pushbullet_device_list").append('<option value="'+devices[i].iden+'">' + devices[i].extras.model + '</option>')
+                    if(devices[i].active == true && devices[i].pushable == true){
+                        if(current_pushbullet_device == devices[i].iden) {
+                            $("#pushbullet_device_list").append('<option value="'+devices[i].iden+'" selected>' + devices[i].nickname + '</option>')
+                        } else {
+                            $("#pushbullet_device_list").append('<option value="'+devices[i].iden+'">' + devices[i].nickname + '</option>')
+                        }
                     }
                 }
                 if(msg) {
