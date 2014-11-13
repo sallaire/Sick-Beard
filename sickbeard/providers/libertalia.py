@@ -88,8 +88,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         showNames = list(set(showNam))
         results = []
         for showName in showNames:
-            results.extend( self.getSearchParams( "%s S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode), ep_obj.show.audio_lang, french ))
-            results.extend( self.getSearchParams( "%s %dx%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode ), ep_obj.show.audio_lang, french ))
+            results.extend( self.getSearchParams( "%s S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode), ep_obj.show.audio_lang, french ))            
         return results
     
     def _get_title_and_url(self, item):
@@ -145,14 +144,14 @@ class LIBERTALIAProvider(generic.TorrentProvider):
 
         resultsTable = soup.find("table", { "class" : "torrent_table"  })
         if resultsTable:
-            #logger.log(u"LIBERTALIA found resulttable ! " , logger.DEBUG)  
+            logger.log(u"LIBERTALIA found resulttable ! " , logger.DEBUG)  
             rows = resultsTable.findAll("tr" ,  {"class" : "torrent_row new"}  )  # torrent_row new
             
             for row in rows:
                            
                 #bypass first row because title only  
                 columns = row.find('td', {"class" : "torrent_name"} )                            
-                #logger.log(u"LIBERTALIA found rows ! " , logger.DEBUG) 
+                logger.log(u"LIBERTALIA found rows ! " , logger.DEBUG) 
                 link = columns.find("a",  href=re.compile("torrents")) 
                 if link:               
                    title = link.text
