@@ -46,7 +46,7 @@ class DownloadStationAPI(GenericClient):
     
     def _get_auth(self):
         
-        auth_url = self.host + 'webapi/auth.cgi?api=SYNO.API.Auth&version=2&method=login&account=' + self.username + '&passwd=' + self.password + '&session=DownloadStation&format=sid'
+        auth_url = self.host + 'webapi/auth.cgi?api=SYNO.API.Auth&version=2&session=DownloadStation&method=login&account=' + self.username + '&passwd=' + self.password + '&session=DownloadStation&format=sid'
         
         try:
             self.response = self.session.get(auth_url)
