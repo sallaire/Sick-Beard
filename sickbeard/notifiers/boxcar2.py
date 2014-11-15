@@ -24,7 +24,7 @@ import urllib2
 import sickbeard
 
 from sickbeard import logger
-from sickbeard.common import notifyStrings, NOTIFY_SNATCH, NOTIFY_DOWNLOAD
+from sickbeard.common import notifyStrings, NOTIFY_SNATCH, NOTIFY_DOWNLOAD, NOTIFY_SUBTITLE_DOWNLOAD
 from sickbeard.exceptions import ex
 
 API_URL = "https://new.boxcar.io/api/notifications"
@@ -120,6 +120,10 @@ class Boxcar2Notifier:
     def notify_download(self, ep_name):
         if sickbeard.BOXCAR2_NOTIFY_ONDOWNLOAD:
             self._notify(notifyStrings[NOTIFY_DOWNLOAD], ep_name)
+
+    def notify_subtitle_download(self, ep_name, lang):
+        if sickbeard.BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD:
+            self._notify(notifyStrings[NOTIFY_SUBTITLE_DOWNLOAD], ep_name + ": " + lang)
 
     def test_notify(self, accessToken, sound):
         return self._notify(message="This is a test notification from Sick Beard", title="Test", accessToken=accessToken, sound=sound, force=True)
