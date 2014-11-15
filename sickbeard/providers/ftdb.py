@@ -51,19 +51,19 @@ class FTDBProvider(generic.TorrentProvider):
                 'name': searchString,
                 'exact' : 1,
                 'group': subcat
-            } ) + "&adv_cat%5Bs%5D%5B3%5D=101&adv_cat%5Bs%5D%5B4%5D=191"
+            } ) + "&adv_cat%5Bs%5D%5B3%5D=101&adv_cat%5Bs%5D%5B4%5D=191&adv_cat%5Bs%5D%5B9%5D=128"
         elif audio_lang == "fr" or french:
             return urllib.urlencode( {
                 'name': searchString,
                 'exact' : 1,
                 'group': subcat
-            } ) + "&adv_cat%5Bs%5D%5B1%5D=95&adv_cat%5Bs%5D%5B2%5D=190"
+            } ) + "&adv_cat%5Bs%5D%5B1%5D=95&adv_cat%5Bs%5D%5B2%5D=190&adv_cat%5Bs%5D%5B9%5D=128"
         else:
             return urllib.urlencode( {
                 'name': searchString,
                 'exact' : 1,
                 'group': subcat
-            } ) + "&adv_cat%5Bs%5D%5B1%5D=95&adv_cat%5Bs%5D%5B2%5D=190&adv_cat%5Bs%5D%5B3%5D=101&adv_cat%5Bs%5D%5B4%5D=191&adv_cat%5Bs%5D%5B5%5D=197&adv_cat%5Bs%5D%5B7%5D=199&adv_cat%5Bs%5D%5B8%5D=201"
+            } ) + "&adv_cat%5Bs%5D%5B1%5D=95&adv_cat%5Bs%5D%5B2%5D=190&adv_cat%5Bs%5D%5B3%5D=101&adv_cat%5Bs%5D%5B4%5D=191&adv_cat%5Bs%5D%5B5%5D=197&adv_cat%5Bs%5D%5B7%5D=199&adv_cat%5Bs%5D%5B8%5D=201&adv_cat%5Bs%5D%5B9%5D=128"
 
     def _get_season_search_strings(self, show, season):
 
