@@ -1361,7 +1361,7 @@ class ConfigProviders:
                       tvtorrents_digest=None, tvtorrents_hash=None,
                       torrentleech_key=None,
                       btn_api_key=None,
-                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None,xthor_username=None,xthor_password=None,thinkgeek_username=None,thinkgeek_password=None,   
+                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None,libertalia_username=None,libertalia_password=None,xthor_username=None,xthor_password=None,thinkgeek_username=None,thinkgeek_password=None,   
                       gks_key=None,
                       ethor_key=None,                      
                       provider_order=None):
@@ -1444,7 +1444,9 @@ class ConfigProviders:
             elif curProvider == 'addict':
                 sickbeard.ADDICT = curEnabled 
             elif curProvider == 'fnt':
-                sickbeard.FNT = curEnabled  
+                sickbeard.FNT = curEnabled
+            elif curProvider == 'libertalia':
+                sickbeard.LIBERTALIA = curEnabled   
             elif curProvider == 'xthor':
                 sickbeard.XTHOR = curEnabled  
             elif curProvider == 'thinkgeek':
@@ -1488,6 +1490,9 @@ class ConfigProviders:
         sickbeard.FNT_USERNAME = fnt_username
         sickbeard.FNT_PASSWORD = fnt_password
 
+        sickbeard.LIBERTALIA_USERNAME = libertalia_username
+        sickbeard.LIBERTALIA_PASSWORD = libertalia_password
+        
         sickbeard.XTHOR_USERNAME = xthor_username
         sickbeard.XTHOR_PASSWORD = xthor_password
         
@@ -1534,7 +1539,7 @@ class ConfigNotifications:
                           use_prowl=None, prowl_notify_onsnatch=None, prowl_notify_ondownload=None, prowl_notify_onsubtitledownload=None, prowl_api=None, prowl_priority=0, 
                           use_twitter=None, twitter_notify_onsnatch=None, twitter_notify_ondownload=None, twitter_notify_onsubtitledownload=None, 
                           use_boxcar=None, boxcar_notify_onsnatch=None, boxcar_notify_ondownload=None, boxcar_notify_onsubtitledownload=None, boxcar_username=None,
-                          use_boxcar2=None, boxcar2_notify_onsnatch=None, boxcar2_notify_ondownload=None, boxcar2_access_token=None, boxcar2_sound=None,
+                          use_boxcar2=None, boxcar2_notify_onsnatch=None, boxcar2_notify_ondownload=None, boxcar2_notify_onsubtitledownload=None, boxcar2_access_token=None, boxcar2_sound=None,
                           use_pushover=None, pushover_notify_onsnatch=None, pushover_notify_ondownload=None, pushover_notify_onsubtitledownload=None, pushover_userkey=None,
                           use_libnotify=None, libnotify_notify_onsnatch=None, libnotify_notify_ondownload=None, libnotify_notify_onsubtitledownload=None,
                           use_nmj=None, nmj_host=None, nmj_database=None, nmj_mount=None, use_synoindex=None,
@@ -1915,6 +1920,7 @@ class ConfigNotifications:
         sickbeard.USE_BOXCAR2 = config.checkbox_to_value(use_boxcar2)
         sickbeard.BOXCAR2_NOTIFY_ONSNATCH = config.checkbox_to_value(boxcar2_notify_onsnatch)
         sickbeard.BOXCAR2_NOTIFY_ONDOWNLOAD = config.checkbox_to_value(boxcar2_notify_ondownload)
+        sickbeard.BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD = config.checkbox_to_value(boxcar2_notify_onsubtitledownload)
         sickbeard.BOXCAR2_ACCESS_TOKEN = boxcar2_access_token
         sickbeard.BOXCAR2_SOUND = boxcar2_sound
 

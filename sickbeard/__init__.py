@@ -30,7 +30,7 @@ from threading import Lock
 
 # apparently py2exe won't build these unless they're imported somewhere
 from sickbeard import providers, metadata
-from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
+from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, libertalia, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
 from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
@@ -233,6 +233,10 @@ FNT = False
 FNT_USERNAME = None
 FNT_PASSWORD = None
 
+LIBERTALIA = False
+LIBERTALIA_USERNAME = None
+LIBERTALIA_PASSWORD = None
+
 XTHOR = False
 XTHOR_USERNAME = None
 XTHOR_PASSWORD = None
@@ -333,6 +337,7 @@ BOXCAR_PREFIX = None
 USE_BOXCAR2 = False
 BOXCAR2_NOTIFY_ONSNATCH = False
 BOXCAR2_NOTIFY_ONDOWNLOAD = False
+BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD = False
 BOXCAR2_ACCESS_TOKEN = None
 BOXCAR2_SOUND = None
 
@@ -480,6 +485,7 @@ def initialize(consoleLogging=True):
                 TPI, TPI_USERNAME, TPI_PASSWORD, \
                 ADDICT, ADDICT_USERNAME, ADDICT_PASSWORD, \
                 FNT, FNT_USERNAME, FNT_PASSWORD, \
+                LIBERTALIA, LIBERTALIA_USERNAME, LIBERTALIA_PASSWORD, \
                 XTHOR, XTHOR_USERNAME, XTHOR_PASSWORD, \
                 THINKGEEK, THINKGEEK_USERNAME, THINKGEEK_PASSWORD, \
                 THEPIRATEBAY, THEPIRATEBAY_PROXY, THEPIRATEBAY_PROXY_URL, THEPIRATEBAY_TRUSTED, \
@@ -503,7 +509,7 @@ def initialize(consoleLogging=True):
                 NZBSRUS, NZBSRUS_UID, NZBSRUS_HASH, WOMBLE, NZBX, NZBX_COMPLETION, OMGWTFNZBS, OMGWTFNZBS_UID, OMGWTFNZBS_KEY, providerList, newznabProviderList, \
                 EXTRA_SCRIPTS, USE_TWITTER, TWITTER_USERNAME, TWITTER_PASSWORD, TWITTER_PREFIX, \
                 USE_BOXCAR, BOXCAR_USERNAME, BOXCAR_PASSWORD, BOXCAR_NOTIFY_ONDOWNLOAD, BOXCAR_NOTIFY_ONSUBTITLEDOWNLOAD, BOXCAR_NOTIFY_ONSNATCH, \
-                USE_BOXCAR2, BOXCAR2_ACCESS_TOKEN, BOXCAR2_NOTIFY_ONDOWNLOAD, BOXCAR2_NOTIFY_ONSNATCH, BOXCAR2_SOUND, \
+                USE_BOXCAR2, BOXCAR2_ACCESS_TOKEN, BOXCAR2_NOTIFY_ONDOWNLOAD, BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD, BOXCAR2_NOTIFY_ONSNATCH, BOXCAR2_SOUND, \
                 USE_PUSHOVER, PUSHOVER_USERKEY, PUSHOVER_NOTIFY_ONDOWNLOAD, PUSHOVER_NOTIFY_ONSUBTITLEDOWNLOAD, PUSHOVER_NOTIFY_ONSNATCH, \
                 USE_LIBNOTIFY, LIBNOTIFY_NOTIFY_ONSNATCH, LIBNOTIFY_NOTIFY_ONDOWNLOAD, LIBNOTIFY_NOTIFY_ONSUBTITLEDOWNLOAD, USE_NMJ, NMJ_HOST, NMJ_DATABASE, NMJ_MOUNT, USE_NMJv2, NMJv2_HOST, NMJv2_DATABASE, NMJv2_DBLOC, USE_SYNOINDEX, \
                 USE_BANNER, USE_LISTVIEW, METADATA_XBMC, METADATA_XBMCFRODO, METADATA_MEDIABROWSER, METADATA_PS3, METADATA_SYNOLOGY, metadata_provider_dict, \
@@ -787,6 +793,11 @@ def initialize(consoleLogging=True):
         FNT_USERNAME = check_setting_str(CFG, 'FNT', 'username', '')
         FNT_PASSWORD = check_setting_str(CFG, 'FNT', 'password', '')
         
+        CheckSection(CFG, 'LIBERTALIA')
+        LIBERTALIA = bool(check_setting_int(CFG, 'LIBERTALIA', 'libertalia', 0))
+        LIBERTALIA_USERNAME = check_setting_str(CFG, 'LIBERTALIA', 'username', '')
+        LIBERTALIA_PASSWORD = check_setting_str(CFG, 'LIBERTALIA', 'password', '')
+        
         CheckSection(CFG, 'XTHOR')
         XTHOR = bool(check_setting_int(CFG, 'XTHOR', 'xthor', 0))
         XTHOR_USERNAME = check_setting_str(CFG, 'XTHOR', 'username', '')
@@ -910,6 +921,7 @@ def initialize(consoleLogging=True):
         USE_BOXCAR2 = bool(check_setting_int(CFG, 'Boxcar2', 'use_boxcar2', 0))
         BOXCAR2_NOTIFY_ONSNATCH = bool(check_setting_int(CFG, 'Boxcar2', 'boxcar2_notify_onsnatch', 0))
         BOXCAR2_NOTIFY_ONDOWNLOAD = bool(check_setting_int(CFG, 'Boxcar2', 'boxcar2_notify_ondownload', 0))
+        BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD = bool(check_setting_int(CFG, 'Boxcar2', 'boxcar2_notify_onsubtitledownload', 0))
         BOXCAR2_ACCESS_TOKEN = check_setting_str(CFG, 'Boxcar2', 'boxcar2_access_token', '')
         BOXCAR2_SOUND = check_setting_str(CFG, 'Boxcar2', 'boxcar2_sound', 'default')
 
@@ -1540,6 +1552,11 @@ def save_config():
     new_config['FNT']['username'] = FNT_USERNAME
     new_config['FNT']['password'] = FNT_PASSWORD
     
+    new_config['LIBERTALIA'] = {}
+    new_config['LIBERTALIA']['libertalia'] = int(LIBERTALIA)
+    new_config['LIBERTALIA']['username'] = LIBERTALIA_USERNAME
+    new_config['LIBERTALIA']['password'] = LIBERTALIA_PASSWORD
+    
     new_config['XTHOR'] = {}
     new_config['XTHOR']['xthor'] = int(XTHOR)
     new_config['XTHOR']['username'] = XTHOR_USERNAME
@@ -1659,6 +1676,7 @@ def save_config():
     new_config['Boxcar2']['use_boxcar2'] = int(USE_BOXCAR2)
     new_config['Boxcar2']['boxcar2_notify_onsnatch'] = int(BOXCAR2_NOTIFY_ONSNATCH)
     new_config['Boxcar2']['boxcar2_notify_ondownload'] = int(BOXCAR2_NOTIFY_ONDOWNLOAD)
+    new_config['Boxcar2']['boxcar2_notify_onsubtitledownload'] = int(BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD)
     new_config['Boxcar2']['boxcar2_access_token'] = BOXCAR2_ACCESS_TOKEN
     new_config['Boxcar2']['boxcar2_sound'] = BOXCAR2_SOUND
 

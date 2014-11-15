@@ -830,6 +830,13 @@
                                 </label>
                             </div>
                             <div class="field-pair">
+                                <input type="checkbox" name="boxcar2_notify_onsubtitledownload" id="boxcar2_notify_onsubtitledownload" #if $sickbeard.BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD then "checked=\"checked\"" else ""# />
+                                <label class="clearfix" for="boxcar2_notify_onsubtitledownload">
+                                    <span class="component-title">Notify on Subtitle Download</span>
+                                    <span class="component-desc">Send notification when we finish a subtitle download?</span>
+                                </label>
+                            </div>
+                            <div class="field-pair">
                                 <label class="nocheck clearfix">
                                     <span class="component-title">Custom Sound</span>
                                     <select id="boxcar2_sound" name="boxcar2_sound">
