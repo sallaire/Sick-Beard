@@ -28,7 +28,6 @@ import urllib
 import urllib2
 import random
 import re
-
 class LIBERTALIAProvider(generic.TorrentProvider):
 
     def __init__(self):
@@ -52,7 +51,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
         results = []    
         if audio_lang == "en" and french==None:
-             results.append( urllib.urlencode( {
+            results.append( urllib.urlencode( {
                 'name': searchString                            
             } ) + "*VO*&cat%5B%5D=9" )
         elif audio_lang == "fr" or french:
@@ -139,8 +138,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
         
         r = self.opener.open( searchUrl )
-
-        soup = BeautifulSoup( r, "html.parser" )
+        soup = BeautifulSoup( r)
 
         resultsTable = soup.find("table", { "class" : "torrent_table"  })
         if resultsTable:
@@ -154,22 +152,22 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 logger.log(u"LIBERTALIA found rows ! " , logger.DEBUG) 
                 link = columns.find("a",  href=re.compile("torrents")) 
                 if link:               
-                   title = link.text
-                   logger.log(u"LIBERTALIA TITLE TEMP: " + title, logger.DEBUG)                   
-                   #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']              
-                   downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']
+                    title = link.text
+                    logger.log(u"LIBERTALIA TITLE TEMP: " + title, logger.DEBUG)                   
+                    #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']              
+                    downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']
                 
-                   quality = Quality.nameQuality( title )
-                   if quality==Quality.UNKNOWN and title:
-                     if '720p' not in title.lower() and '1080p' not in title.lower():
-                        quality=Quality.SDTV
-                   if show and french==None:
-                     results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                   elif show and french:
-                     results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                   else:
-                    results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
-        
+                    quality = Quality.nameQuality( title )
+                    if quality==Quality.UNKNOWN and title:
+                        if '720p' not in title.lower() and '1080p' not in title.lower():
+                            quality=Quality.SDTV
+                    if show and french==None:
+                        results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                    elif show and french:
+                        results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                    else:
+                        results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
+                    
         return results
     
     def getResult(self, episodes):

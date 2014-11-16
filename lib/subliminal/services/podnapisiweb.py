@@ -109,6 +109,7 @@ class PodnapisiWeb(ServiceBase):
             return []
         subtitles = []
         soup = BeautifulSoup(r.content, self.required_features)
+        print soup
         for sub in soup('subtitle'):
             if 'n' in sub.flags:
                 logger.debug(u'Skipping hearing impaired')
