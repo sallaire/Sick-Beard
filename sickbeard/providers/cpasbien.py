@@ -84,7 +84,7 @@ class CpasbienProvider(generic.TorrentProvider):
             logger.log(u"Error trying to load cpasbien response: "+str(e), logger.ERROR)
             return []
 
-        rows = soup.findAll(attrs = {'class' : ["color0", "color1"]})
+        rows = soup.findAll(attrs = {'class' : ["ligne0", "ligne1"]})
 
         for row in rows:
             link = row.find("a", title=True)
