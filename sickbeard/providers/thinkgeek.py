@@ -1,5 +1,5 @@
 # -*- coding: latin-1 -*-
-# Author: Raver2046 <raver2046@gmail.com>
+# Author: Raver2046 
 # based on tpi.py
 # URL: http://code.google.com/p/sickbeard/
 #
@@ -89,7 +89,6 @@ class THINKGEEKProvider(generic.TorrentProvider):
         results = []
         for showName in showNames:
             results.extend( self.getSearchParams( "%s S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode), ep_obj.show.audio_lang, french ))
-            results.extend( self.getSearchParams( "%s %dx%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode ), ep_obj.show.audio_lang, french ))
         return results
     
     def _get_title_and_url(self, item):

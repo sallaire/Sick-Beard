@@ -1,5 +1,5 @@
 # -*- coding: latin-1 -*-
-# Author: Raver2046 <raver2046@gmail.com>
+# Author: Raver2046 
 # based on tpi.py
 # URL: http://code.google.com/p/sickbeard/
 #
@@ -53,15 +53,15 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         if audio_lang == "en" and french==None:
             results.append( urllib.urlencode( {
                 'name': searchString                            
-            } ) + "*VO*&cat%5B%5D=9" )
+            } ) + "*VO*&cat%5B%5D=9&[PARAMSTR]=" + searchString +" VO" )
         elif audio_lang == "fr" or french:
             results.append( urllib.urlencode( {
                 'name': searchString
-            } ) + "*FRENCH*&cat%5B%5D=9")
+            } ) + "*FRENCH*&cat%5B%5D=9&[PARAMSTR]=" + searchString +" FRENCH")
         else:
             results.append( urllib.urlencode( {
                 'name': searchString
-            } ) + "&cat%5B%5D=9")
+            } ) + "&cat%5B%5D=9&[PARAMSTR]=" + searchString )
         return results
         
     def _get_season_search_strings(self, show, season):
@@ -150,23 +150,26 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 #bypass first row because title only  
                 columns = row.find('td', {"class" : "torrent_name"} )                            
                 logger.log(u"LIBERTALIA found rows ! " , logger.DEBUG) 
-                link = columns.find("a",  href=re.compile("torrents")) 
+                link = columns.find("a",  href=re.compile("torrents"))                    
                 if link:               
                     title = link.text
-                    logger.log(u"LIBERTALIA TITLE TEMP: " + title, logger.DEBUG)                   
-                    #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']              
-                    downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']
-                
-                    quality = Quality.nameQuality( title )
-                    if quality==Quality.UNKNOWN and title:
-                        if '720p' not in title.lower() and '1080p' not in title.lower():
+                    recherched=searchUrl.split("&[PARAMSTR]=")[1]
+                    recherched=recherched.replace(" ","(.*)")
+                    logger.log(u"LIBERTALIA TITLE : " + title, logger.DEBUG)  
+                    logger.log(u"LIBERTALIA CHECK MATCH : " + recherched, logger.DEBUG)                                        
+                    #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']
+                    if re.match(recherched,title , re.IGNORECASE):              
+                      downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']                
+                      quality = Quality.nameQuality( title )
+                      if quality==Quality.UNKNOWN and title:
+                          if '720p' not in title.lower() and '1080p' not in title.lower():
                             quality=Quality.SDTV
-                    if show and french==None:
-                        results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                    elif show and french:
-                        results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                    else:
-                        results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
+                      if show and french==None:
+                          results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                      elif show and french:
+                          results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                      else:
+                          results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
                     
         return results
     
