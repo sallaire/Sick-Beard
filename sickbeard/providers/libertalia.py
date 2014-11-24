@@ -159,17 +159,17 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                     logger.log(u"LIBERTALIA CHECK MATCH : " + recherched, logger.DEBUG)                                        
                     #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']
                     if re.match(recherched,title , re.IGNORECASE):              
-                      downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']                
-                      quality = Quality.nameQuality( title )
-                      if quality==Quality.UNKNOWN and title:
-                          if '720p' not in title.lower() and '1080p' not in title.lower():
-                            quality=Quality.SDTV
-                      if show and french==None:
-                          results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                      elif show and french:
-                          results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                      else:
-                          results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
+                        downloadURL =  row.find("a",href=re.compile("torrent_pass"))['href']                
+                        quality = Quality.nameQuality( title )
+                        if quality==Quality.UNKNOWN and title:
+                            if '720p' not in title.lower() and '1080p' not in title.lower():
+                                quality=Quality.SDTV
+                        if show and french==None:
+                            results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                        elif show and french:
+                            results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                        else:
+                            results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
                     
         return results
     
