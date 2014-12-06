@@ -154,7 +154,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 if link:               
                     title = link.text
                     recherched=searchUrl.split("&[PARAMSTR]=")[1]
-                    recherched=recherched.replace(" ","(.*)")
+                    recherched=recherched.replace(" ","(.*)").replace(".","(.*)").replace("'","(.*)")
                     logger.log(u"LIBERTALIA TITLE : " + title, logger.DEBUG)  
                     logger.log(u"LIBERTALIA CHECK MATCH : " + recherched, logger.DEBUG)                                        
                     #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']
