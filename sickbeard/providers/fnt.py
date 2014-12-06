@@ -139,7 +139,7 @@ class FNTProvider(generic.TorrentProvider):
            
             for row in rows:
             
-                link = row.findAll('td')[1].find("a" )                                                         
+                link = row.findAll('td')[1].find("a" , href=re.compile("fiche_film") )                                                         
                                   
                 if link:               
                    title = link.text
