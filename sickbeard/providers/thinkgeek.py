@@ -153,7 +153,7 @@ class THINKGEEKProvider(generic.TorrentProvider):
                 if link:               
                    title = link.text
                    recherched=searchUrl.split("&[PARAMSTR]=")[1]
-                   recherched=recherched.replace(" ","(.*)").replace(".","(.*)").replace("'","(.*)")
+                   recherched=recherched.replace(".","(.*)").replace(" ","(.*)").replace("'","(.*)")
                    logger.log(u"THINKGEEK TITLE : " + title, logger.DEBUG)  
                    logger.log(u"THINKGEEK CHECK MATCH : " + recherched, logger.DEBUG) 
                    if re.match(recherched,title , re.IGNORECASE):                 
