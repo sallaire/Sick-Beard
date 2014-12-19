@@ -1545,6 +1545,7 @@ class ConfigNotifications:
                           use_nmj=None, nmj_host=None, nmj_database=None, nmj_mount=None, use_synoindex=None,
                           use_nmjv2=None, nmjv2_host=None, nmjv2_dbloc=None, nmjv2_database=None,
                           use_trakt=None, trakt_username=None, trakt_password=None, trakt_api=None,trakt_remove_watchlist=None,trakt_use_watchlist=None,trakt_start_paused=None,trakt_method_add=None,
+                          use_betaseries=None, betaseries_username=None, betaseries_password=None,
                           use_synologynotifier=None, synologynotifier_notify_onsnatch=None, synologynotifier_notify_ondownload=None, synologynotifier_notify_onsubtitledownload=None,
                           use_pytivo=None, pytivo_notify_onsnatch=None, pytivo_notify_ondownload=None, pytivo_notify_onsubtitledownload=None, pytivo_update_library=None, 
                           pytivo_host=None, pytivo_share_name=None, pytivo_tivo_name=None,
@@ -1771,6 +1772,11 @@ class ConfigNotifications:
         else:
             trakt_start_paused = 0
 
+        if use_betaseries == "on":
+            use_betaseries = 1
+        else:
+            use_betaseries = 0
+
         if use_pytivo == "on":
             use_pytivo = 1
         else:
@@ -1960,6 +1966,10 @@ class ConfigNotifications:
         sickbeard.TRAKT_USE_WATCHLIST = trakt_use_watchlist
         sickbeard.TRAKT_METHOD_ADD = trakt_method_add
         sickbeard.TRAKT_START_PAUSED = trakt_start_paused
+
+        sickbeard.USE_BETASERIES = use_betaseries
+        sickbeard.BETASERIES_USERNAME = betaseries_username
+        sickbeard.BETASERIES_PASSWORD = betaseries_password
 
         sickbeard.USE_PYTIVO = use_pytivo
         sickbeard.PYTIVO_NOTIFY_ONSNATCH = pytivo_notify_onsnatch == "off"
@@ -2844,6 +2854,16 @@ class Home:
             return "Test notice sent successfully to Trakt"
         else:
             return "Test notice failed to Trakt"
+
+    @cherrypy.expose
+    def testBetaSeries(self, username=None, password=None):
+        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
+
+        result = notifiers.betaseries_notifier.test_notify(username, password)
+        if result:
+            return "Test notice sent successfully to BetaSeries"
+        else:
+            return "Test notice failed to BetaSeries"
 
     @cherrypy.expose
     def testMail(self, mail_from=None, mail_to=None, mail_server=None, mail_ssl=None, mail_user=None, mail_password=None):
