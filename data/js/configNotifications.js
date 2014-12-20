@@ -280,7 +280,6 @@ $(document).ready(function () {
     // we have to call this function on dom ready to create the devices select
     get_pushbullet_devices();
 	
-	
     $('#testBetaSeries').click(function () {
         $('#testBetaSeries-result').html(loading);
         var betaseries_username = $("#betaseries_username").val();
