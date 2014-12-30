@@ -83,19 +83,30 @@ class CpasbienProvider(generic.TorrentProvider):
         except Exception, e:
             logger.log(u"Error trying to load cpasbien response: "+str(e), logger.ERROR)
             return []
-
-        rows = soup.findAll(attrs = {'class' : ["ligne0", "ligne1"]})
-
-        for row in rows:
+        lin=0
+        erlin=0
+        resultdiv=[]
+        while erlin==0:
+            try:
+                classlin='ligne'+str(lin)
+                resultlin=soup.findAll(attrs = {'class' : [classlin]})
+                if resultlin:
+                    for ele in resultlin:
+                        resultdiv.append(ele)
+                    lin+=1
+                else:
+                    erlin=1
+            except:
+                erlin=1
+        for row in resultdiv:
             link = row.find("a", title=True)
             title = str(link.text).lower().strip()  
             pageURL = link['href']
 
             if "vostfr" in title and ((not show.subtitles) or show.audio_lang == "fr" or french):
                 continue
-
-            torrentPage = self.opener.open( pageURL )
-            torrentSoup = BeautifulSoup( torrentPage )
+            if "french" in title and show.audio_lang == "en" and (not french):
+                continue
 
             #downloadTorrentLink = torrentSoup.find("a", title.startswith('Cliquer'))
             tmp = pageURL.split('/')[-1].replace('.html','.torrent')
