@@ -1361,8 +1361,7 @@ class ConfigProviders:
                       tvtorrents_digest=None, tvtorrents_hash=None,
                       torrentleech_key=None,
                       btn_api_key=None,
-                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,tpi_username=None,tpi_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None,libertalia_username=None,libertalia_password=None,xthor_username=None,xthor_password=None,thinkgeek_username=None,thinkgeek_password=None,   
-                      gks_key=None,
+                      newzbin_username=None, newzbin_password=None,t411_username=None,t411_password=None,ftdb_username=None,ftdb_password=None,addict_username=None,addict_password=None,fnt_username=None,fnt_password=None,libertalia_username=None,libertalia_password=None,xthor_username=None,xthor_password=None,thinkgeek_username=None,thinkgeek_password=None,   
                       ethor_key=None,                      
                       provider_order=None):
 
@@ -1439,8 +1438,6 @@ class ConfigProviders:
                 sickbeard.T411 = curEnabled
             elif curProvider == 'ftdb':
                 sickbeard.FTDB = curEnabled
-            elif curProvider == 'tpi':
-                sickbeard.TPI = curEnabled
             elif curProvider == 'addict':
                 sickbeard.ADDICT = curEnabled 
             elif curProvider == 'fnt':
@@ -1457,8 +1454,6 @@ class ConfigProviders:
                 sickbeard.kat = curEnabled
             elif curProvider == 'piratebay':
                 sickbeard.THEPIRATEBAY = curEnabled
-            elif curProvider == 'gks':
-                sickbeard.GKS = curEnabled
             elif curProvider == 'ethor':
                 sickbeard.ETHOR = curEnabled                
             elif curProvider in newznabProviderDict:
@@ -1481,9 +1476,6 @@ class ConfigProviders:
         sickbeard.FTDB_USERNAME = ftdb_username
         sickbeard.FTDB_PASSWORD = ftdb_password
 
-        sickbeard.TPI_USERNAME = tpi_username
-        sickbeard.TPI_PASSWORD = tpi_password
-        
         sickbeard.ADDICT_USERNAME = addict_username
         sickbeard.ADDICT_PASSWORD = addict_password
         
@@ -1505,8 +1497,6 @@ class ConfigProviders:
         sickbeard.OMGWTFNZBS_UID = omgwtfnzbs_uid.strip()
         sickbeard.OMGWTFNZBS_KEY = omgwtfnzbs_key.strip()
         
-        sickbeard.GKS_KEY = gks_key.strip()
-
         sickbeard.PROVIDER_ORDER = provider_list
 
         sickbeard.save_config()
