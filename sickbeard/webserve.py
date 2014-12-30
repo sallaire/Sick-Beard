@@ -1870,7 +1870,26 @@ class ConfigNotifications:
             pushbullet_notify_onsubtitledownload = 1
         else:
             pushbullet_notify_onsubtitledownload = 0
+            
+        if use_boxcar2=="on":
+            use_boxcar2=1
+        else:
+            use_boxcar2=0
+        if boxcar2_notify_onsnatch == "on":
+            boxcar2_notify_onsnatch = 1
+        else:
+            boxcar2_notify_onsnatch = 0
 
+        if boxcar2_notify_ondownload == "on":
+            boxcar2_notify_ondownload = 1
+        else:
+            boxcar2_notify_ondownload = 0
+
+        if boxcar2_notify_onsubtitledownload == "on":
+            boxcar2_notify_onsubtitledownload = 1
+        else:
+            boxcar2_notify_onsubtitledownload = 0
+        
         sickbeard.USE_XBMC = use_xbmc
         sickbeard.XBMC_NOTIFY_ONSNATCH = xbmc_notify_onsnatch
         sickbeard.XBMC_NOTIFY_ONDOWNLOAD = xbmc_notify_ondownload
@@ -1917,10 +1936,10 @@ class ConfigNotifications:
         sickbeard.BOXCAR_NOTIFY_ONSUBTITLEDOWNLOAD = boxcar_notify_onsubtitledownload
         sickbeard.BOXCAR_USERNAME = boxcar_username
 
-        sickbeard.USE_BOXCAR2 = config.checkbox_to_value(use_boxcar2)
-        sickbeard.BOXCAR2_NOTIFY_ONSNATCH = config.checkbox_to_value(boxcar2_notify_onsnatch)
-        sickbeard.BOXCAR2_NOTIFY_ONDOWNLOAD = config.checkbox_to_value(boxcar2_notify_ondownload)
-        sickbeard.BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD = config.checkbox_to_value(boxcar2_notify_onsubtitledownload)
+        sickbeard.USE_BOXCAR2 = use_boxcar2
+        sickbeard.BOXCAR2_NOTIFY_ONSNATCH = boxcar2_notify_onsnatch
+        sickbeard.BOXCAR2_NOTIFY_ONDOWNLOAD = boxcar2_notify_ondownload
+        sickbeard.BOXCAR2_NOTIFY_ONSUBTITLEDOWNLOAD = boxcar2_notify_onsubtitledownload
         sickbeard.BOXCAR2_ACCESS_TOKEN = boxcar2_access_token
         sickbeard.BOXCAR2_SOUND = boxcar2_sound
 
