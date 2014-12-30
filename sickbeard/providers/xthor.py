@@ -52,7 +52,7 @@ class XTHORProvider(generic.TorrentProvider):
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
         results = []    
         if audio_lang == "en" and french==None:
-             results.append( urllib.urlencode( {
+            results.append( urllib.urlencode( {
                 'keywords': searchString  ,                                                         
             } ) + "&cid=43,69&[PARAMSTR]=" + searchString )
         elif audio_lang == "fr" or french:
@@ -145,7 +145,7 @@ class XTHORProvider(generic.TorrentProvider):
         
         r = self.opener.open( searchUrl )
 
-        soup = BeautifulSoup( r, "html.parser" )
+        soup = BeautifulSoup( r)
 
         resultsTable = soup.find("table", { "id" : "torrents_table_classic"  })
         if resultsTable:
@@ -157,24 +157,26 @@ class XTHORProvider(generic.TorrentProvider):
                 link = row.find("a",href=re.compile("action=details"))                                                           
                                   
                 if link:               
-                   title = link.text
-                   recherched=searchUrl.split("&[PARAMSTR]=")[1]
-                   recherched=recherched.replace(" ","(.*)")
-                   logger.log(u"XTHOR TITLE : " + title, logger.DEBUG)
-                   logger.log(u"XTHOR CHECK MATCH : " + recherched, logger.DEBUG)                                        
-                   if re.match(recherched,title , re.IGNORECASE):                                        
-                     downloadURL =  row.find("a",href=re.compile("action=download"))['href']             
-                     logger.log(u"XTHOR DOWNLOAD URL : " + downloadURL, logger.DEBUG) 
-                     quality = Quality.nameQuality( title )
-                     if quality==Quality.UNKNOWN and title:
-                       if '720p' not in title.lower() and '1080p' not in title.lower():
-                         quality=Quality.SDTV
-                     if show and french==None:
-                         results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                     elif show and french:
-                         results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                     else:
-                         results.append( XTHORSearchResult( self.opener, title, downloadURL, quality ) )
+                    title = link.text
+                    recherched=searchUrl.split("&[PARAMSTR]=")[1]
+                    recherched=recherched.replace(" ","(.*)")
+                    logger.log(u"XTHOR TITLE : " + title, logger.DEBUG)
+                    logger.log(u"XTHOR CHECK MATCH : " + recherched, logger.DEBUG)                                        
+                    if re.match(recherched,title , re.IGNORECASE):                                        
+                        downloadURL =  row.find("a",href=re.compile("action=download"))['href']             
+                        logger.log(u"XTHOR DOWNLOAD URL : " + downloadURL, logger.DEBUG) 
+                    else:
+                        continue
+                    quality = Quality.nameQuality( title )
+                    if quality==Quality.UNKNOWN and title:
+                        if '720p' not in title.lower() and '1080p' not in title.lower():
+                            quality=Quality.SDTV
+                    if show and french==None:
+                        results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                    elif show and french:
+                        results.append( XTHORSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                    else:
+                        results.append( XTHORSearchResult( self.opener, title, downloadURL, quality ) )
         
         return results
     

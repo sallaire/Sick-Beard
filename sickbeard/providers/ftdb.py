@@ -167,7 +167,7 @@ class FTDBProvider(generic.TorrentProvider):
                 link = row.find("a", title=True)
                 title = link['title']
 
-                autogetURL = self.url + (row.find("li", { "class" : "torrents_name"}).find('a')['href'][1:]).replace('#FTD_MENU','&menu=4')
+                autogetURL = self.url +'/'+ (row.find("li", { "class" : "torrents_name"}).find('a')['href'][1:]).replace('#FTD_MENU','&menu=4')
                 r = self.opener.open(autogetURL,'wb').read()
                 soup = BeautifulSoup( r)
                 downloadURL = soup.find("div", { "class" : "autoget"}).find('a')['href']
