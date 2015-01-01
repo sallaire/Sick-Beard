@@ -146,6 +146,7 @@ class FTDBProvider(generic.TorrentProvider):
         })
 
         self.opener.open(self.url + '/?section=LOGIN&ajax=1', data).read()
+        self.login_done = self.opener
 
     def _doSearch(self, searchString, show=None, season=None, french=None):
 
@@ -157,7 +158,7 @@ class FTDBProvider(generic.TorrentProvider):
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
 
         r = self.opener.open( searchUrl )
-        soup = BeautifulSoup( r, "html.parser" )
+        soup = BeautifulSoup( r )
         resultsTable = soup.find("div", { "class" : "DataGrid" })
         if resultsTable:
             rows = resultsTable.findAll("ul")
@@ -166,9 +167,9 @@ class FTDBProvider(generic.TorrentProvider):
                 link = row.find("a", title=True)
                 title = link['title']
 
-                autogetURL = self.url + (row.find("li", { "class" : "torrents_name"}).find('a')['href'][1:]).replace('#FTD_MENU','&menu=4')
-                r = self.opener.open( autogetURL , 'wb').read()
-                soup = BeautifulSoup( r, "html.parser" )
+                autogetURL = self.url +'/'+ (row.find("li", { "class" : "torrents_name"}).find('a')['href'][1:]).replace('#FTD_MENU','&menu=4')
+                r = self.opener.open(autogetURL,'wb').read()
+                soup = BeautifulSoup( r)
                 downloadURL = soup.find("div", { "class" : "autoget"}).find('a')['href']
 
                 quality = Quality.nameQuality( title )

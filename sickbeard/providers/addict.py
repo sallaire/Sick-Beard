@@ -51,7 +51,7 @@ class ADDICTProvider(generic.TorrentProvider):
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
         results = []    
         if audio_lang == "en" and french==None:
-             results.append( urllib.urlencode( {
+            results.append( urllib.urlencode( {
                 'search': searchString                            
             } ) + "&category=31%3B33%3B51" )
         elif audio_lang == "fr" or french:
@@ -130,35 +130,39 @@ class ADDICTProvider(generic.TorrentProvider):
         
         r = self.opener.open( searchUrl )
 
-        soup = BeautifulSoup( r, "html.parser" )
+        soupfull = BeautifulSoup( r)
+        delbegin=str(soupfull.prettify).split('<table width="100%">')[1]
+        restable=delbegin[delbegin.find('<table'):delbegin.find('table>')+6]
+        soup=BeautifulSoup(restable)
+        resultsTable = soup.find("table")
 
-        resultsTable = soup.find("table", { "class" : "lista" , "width":"100%" })
         if resultsTable:
 
             rows = resultsTable.findAll("tr")
             x=0
             for row in rows:
-              x=x+1
-              if (x > 1): 
+                x=x+1
+                if (x > 1): 
                 #bypass first row because title only
-                columns = row.find('td')                            
+                    if 'Liste des torrents' in str(row) :
+                        continue                           
                  
-                link = row.findAll('td')[1].find("a",  href=re.compile("torrent-details")) 
-                if link:               
-                   title = link.text
-                   logger.log(u"ADDICT TITLE TEMP: " + title, logger.DEBUG)                   
-                   downloadURL =  self.url + "/" + row.find("a",href=re.compile("\.torrent"))['href']              
+                    link = row.findAll('td')[1].find("a",  href=re.compile("torrent-details")) 
+                    if link:               
+                        title = link.text
+                        logger.log(u"ADDICT TITLE TEMP: " + title, logger.DEBUG)                   
+                        downloadURL =  self.url + "/" + row.find("a",href=re.compile("\.torrent"))['href']              
                 
-                   quality = Quality.nameQuality( title )
-                   if quality==Quality.UNKNOWN and title:
-                     if '720p' not in title.lower() and '1080p' not in title.lower():
-                        quality=Quality.SDTV
-                   if show and french==None:
-                     results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
-                   elif show and french:
-                     results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
-                   else:
-                    results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality ) )
+                        quality = Quality.nameQuality( title )
+                        if quality==Quality.UNKNOWN and title:
+                            if '720p' not in title.lower() and '1080p' not in title.lower():
+                                quality=Quality.SDTV
+                        if show and french==None:
+                            results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
+                        elif show and french:
+                            results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
+                        else:
+                            results.append( ADDICTSearchResult( self.opener, title, downloadURL, quality ) )
         
         return results
     
