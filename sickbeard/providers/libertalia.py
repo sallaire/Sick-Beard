@@ -49,15 +49,23 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         return sickbeard.LIBERTALIA
     
     def getSearchParams(self, searchString, audio_lang, french=None, fullSeason=False):
-        results = []    
+        results = []
+        if fullSeason:
+            cat='9.2'
+        else:
+            cat='9'
         if audio_lang == "en" and french==None:
             results.append( urllib.urlencode( {
                 'name': searchString                            
-            } ) + "*VO*&cat%5B%5D=9&[PARAMSTR]=" + searchString +" VO" )
+            } ) + "*VO*&cat%5B%5D="+cat+"&[PARAMSTR]=" + searchString +" VO" )
+        elif audio_lang == "en" and french==None:
+            results.append( urllib.urlencode( {
+                'name': searchString                            
+            } ) + "*VO*&cat%5B%5D="+cat+"&[PARAMSTR]=" + searchString +" VO" )
         elif audio_lang == "fr" or french:
             results.append( urllib.urlencode( {
                 'name': searchString
-            } ) + "*FRENCH*&cat%5B%5D=9&[PARAMSTR]=" + searchString +" FRENCH")
+            } ) + "*FRENCH*&cat%5B%5D="+cat+"&[PARAMSTR]=" + searchString +" FRENCH")
         else:
             results.append( urllib.urlencode( {
                 'name': searchString
@@ -70,14 +78,6 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         showNames = list(set(showNam))
         results = []
         for showName in showNames:
-            results.extend( self.getSearchParams(showName + " saison%d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " season%d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " saison %d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " season %d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " saison%02d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " season%02d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " saison %02d" % season, show.audio_lang, fullSeason=True))
-            results.extend( self.getSearchParams(showName + " season %02d" % season, show.audio_lang, fullSeason=True))
             results.extend( self.getSearchParams(showName + ".S%02d." % season, show.audio_lang, fullSeason=True))
         return results
 
@@ -143,7 +143,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
         resultsTable = soup.find("table", { "class" : "torrent_table"  })
         if resultsTable:
             logger.log(u"LIBERTALIA found resulttable ! " , logger.DEBUG)  
-            rows = resultsTable.findAll("tr" ,  {"class" : "torrent_row new"}  )  # torrent_row new
+            rows = resultsTable.findAll("tr" ,  {"class" : "torrent_row  new  "}  )  # torrent_row new
             
             for row in rows:
                            
