@@ -73,7 +73,7 @@ ep_regexes = [
               ('standard_cpas_bien',
                # [www.Cpasbien.me] Dexter.S07E04.FRENCH.LD.HDTV.XviD-MiNDe
                '''
-               \[[a-zA-Z0-9\.]{2,20}\][. _-]+
+               \[[a-zA-Z0-9\.\s]{2,20}\][. _-]+
                (?P<series_name>.+?)[. _-]+                # Show_Name and separator
                s(?P<season_num>\d+)[. _-]*                 # S01 and optional separator
                e(?P<ep_num>\d+)                            # E02 and separator
