@@ -34,7 +34,7 @@ API_KEY = "OKCXmkvHN1syU2e8xvpefTnyvVWGv5"
 class PushoverNotifier:
 
     def test_notify(self, userKey=None):
-        return self._sendPushover("Ceci est une notification de test venant de Sickbeard VO/VF (יא)", 'Test', userKey )
+        return self._sendPushover("Ceci est une notification de test venant de Sickbeard VO/VF", 'Test', userKey )
 
     def _sendPushover(self, msg, title, userKey=None):
         """
