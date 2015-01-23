@@ -44,9 +44,9 @@ NOTIFY_DOWNLOAD = 2
 NOTIFY_SUBTITLE_DOWNLOAD = 3
 
 notifyStrings = {}
-notifyStrings[NOTIFY_SNATCH] = "Episode récupéré"
-notifyStrings[NOTIFY_DOWNLOAD] = "Episode téléchargé"
-notifyStrings[NOTIFY_SUBTITLE_DOWNLOAD] = "Sous-titre téléchargé"
+notifyStrings[NOTIFY_SNATCH] = "Download en cours"
+notifyStrings[NOTIFY_DOWNLOAD] = "Download finis"
+notifyStrings[NOTIFY_SUBTITLE_DOWNLOAD] = "Sous-titre"
 
 ### Episode statuses
 UNKNOWN = -1 # should never happen
