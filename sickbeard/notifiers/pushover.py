@@ -1,3 +1,4 @@
+# -*- coding: latin-1 -*-
 # Author: Marvin Pinto <me@marvinp.ca>
 # Author: Dennis Lutter <lad1337@gmail.com>
 # Author: Aaron Bieber <deftly@gmail.com>
@@ -33,9 +34,9 @@ API_KEY = "OKCXmkvHN1syU2e8xvpefTnyvVWGv5"
 class PushoverNotifier:
 
     def test_notify(self, userKey=None):
-        return self._sendPushover("This is a test notification from SickBeard", 'Test', userKey )
+        return self._sendPushover("Ceci est une notification de test venant de Sickbeard VO/VF (יא)", 'Test', userKey )
 
-    def _sendPushover(self, msg, title, userKey=None ):
+    def _sendPushover(self, msg, title, userKey=None):
         """
         Sends a pushover notification to the address provided
         
@@ -58,7 +59,8 @@ class PushoverNotifier:
             'title': title,
             'user': userKey,
             'message': msg.encode('utf-8'),
-            'timestamp': int(time.time())
+            'timestamp': int(time.time()),
+            'priority': sickbeard.PUSHOVER_PRIO
 			})
 
 
