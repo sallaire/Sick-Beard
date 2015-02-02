@@ -29,18 +29,21 @@ from sickbeard import logger, common
 class PushbulletNotifier:
 
     def test_notify(self, pushbullet_api):
-        return self._sendPushbullet(pushbullet_api, event="Test", message="Testing Pushbullet settings from Sick Beard", method="POST", notificationType="note", force=True)
+        return self._sendPushbullet(pushbullet_api, message="Test", event="Testing Pushbullet settings from Sick Beard", method="POST", notificationType="note", force=True)
 
     def get_devices(self, pushbullet_api):
         return self._sendPushbullet(pushbullet_api, method="GET", force=True)
 
+    def get_channels(self, pushbullet_api):
+        return self._sendPushbullet(pushbullet_api, method="GET", force=True, event="getChannels")
+
     def notify_snatch(self, ep_name):
         if sickbeard.PUSHBULLET_NOTIFY_ONSNATCH:
-            self._sendPushbullet(pushbullet_api=None, event=common.notifyStrings[common.NOTIFY_SNATCH], message=ep_name, notificationType="note", method="POST")
+            self._sendPushbullet(pushbullet_api=None, message=common.notifyStrings[common.NOTIFY_SNATCH], event="Snatched ->"+ep_name, notificationType="note", method="POST")
 
     def notify_download(self, ep_name):
         if sickbeard.PUSHBULLET_NOTIFY_ONDOWNLOAD:
-            self._sendPushbullet(pushbullet_api=None, event=common.notifyStrings[common.NOTIFY_DOWNLOAD], message=ep_name, notificationType="note", method="POST")
+            self._sendPushbullet(pushbullet_api=None, message=common.notifyStrings[common.NOTIFY_DOWNLOAD], event="DL ->"+ep_name, notificationType="note", method="POST")
 
     def notify_subtitle_download(self, ep_name, lang):
         if sickbeard.PUSHBULLET_NOTIFY_ONSUBTITLEDOWNLOAD:
@@ -55,11 +58,14 @@ class PushbulletNotifier:
             pushbullet_api = sickbeard.PUSHBULLET_API
         if pushbullet_device == None:
             pushbullet_device = sickbeard.PUSHBULLET_DEVICE
-
+    
         if method == 'POST':
             uri = '/v2/pushes'
-        else:
+        else: 
             uri = '/v2/devices'
+
+        if event == 'getChannels':
+            uri = '/v2/channels'
 
         logger.log(u"Pushbullet event: " + str(event), logger.DEBUG)
         logger.log(u"Pushbullet message: " + str(message), logger.DEBUG)
@@ -80,11 +86,20 @@ class PushbulletNotifier:
         else:
             testMessage = False
             try:
-                data = {
-                    'title': event.encode('utf-8'),
-                    'body': message.encode('utf-8'),
-                    'device_iden': pushbullet_device,
-                    'type': notificationType}
+                device = pushbullet_device.split(':');
+                if device[0] == 'device':
+                    data = {
+                        'title': event.encode('utf-8'),
+                        'body': message.encode('utf-8'),
+                        'device_iden': device[1],
+                        'type': notificationType}
+                else:
+                    data = {
+                        'title': event.encode('utf-8'),
+                        'body': message.encode('utf-8'),
+                        'channel_tag': device[1],
+                        'type': notificationType}
+
                 data = json.dumps(data)
                 http_handler.request(method, uri, body=data,
                                      headers={'Content-Type': 'application/json', 'Authorization': 'Bearer %s' % pushbullet_api})
