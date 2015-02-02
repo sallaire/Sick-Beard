@@ -29,7 +29,7 @@ from sickbeard import logger, common
 class PushbulletNotifier:
 
     def test_notify(self, pushbullet_api):
-        return self._sendPushbullet(pushbullet_api, message="Test", event="Testing Pushbullet settings from Sick Beard", method="POST", notificationType="note", force=True)
+        return self._sendPushbullet(pushbullet_api, event="Test", message="Testing Pushbullet settings from Sick Beard", method="POST", notificationType="note", force=True)
 
     def get_devices(self, pushbullet_api):
         return self._sendPushbullet(pushbullet_api, method="GET", force=True)
@@ -39,11 +39,11 @@ class PushbulletNotifier:
 
     def notify_snatch(self, ep_name):
         if sickbeard.PUSHBULLET_NOTIFY_ONSNATCH:
-            self._sendPushbullet(pushbullet_api=None, message=common.notifyStrings[common.NOTIFY_SNATCH], event="Snatched ->"+ep_name, notificationType="note", method="POST")
+            self._sendPushbullet(pushbullet_api=None, event=common.notifyStrings[common.NOTIFY_SNATCH], message=ep_name, notificationType="note", method="POST")
 
     def notify_download(self, ep_name):
         if sickbeard.PUSHBULLET_NOTIFY_ONDOWNLOAD:
-            self._sendPushbullet(pushbullet_api=None, message=common.notifyStrings[common.NOTIFY_DOWNLOAD], event="DL ->"+ep_name, notificationType="note", method="POST")
+            self._sendPushbullet(pushbullet_api=None, event=common.notifyStrings[common.NOTIFY_DOWNLOAD], message=ep_name, notificationType="note", method="POST")
 
     def notify_subtitle_download(self, ep_name, lang):
         if sickbeard.PUSHBULLET_NOTIFY_ONSUBTITLEDOWNLOAD:
