@@ -39,6 +39,7 @@ import pushbullet
 
 import tweet
 import trakt
+import betaseries
 
 from sickbeard.common import *
 
@@ -63,6 +64,7 @@ pushbullet_notifier = pushbullet.PushbulletNotifier()
 # online
 twitter_notifier = tweet.TwitterNotifier()
 trakt_notifier = trakt.TraktNotifier()
+betaseries_notifier = betaseries.BetaSeriesNotifier()
 mail_notifier = mail.MailNotifier()
 
 notifiers = [
@@ -84,6 +86,7 @@ notifiers = [
     pushbullet_notifier,
     twitter_notifier,
     trakt_notifier,
+    betaseries_notifier,
     mail_notifier,
 ]
 

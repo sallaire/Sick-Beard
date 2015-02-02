@@ -298,6 +298,15 @@ $(document).ready(function () {
     
     // we have to call this function on dom ready to create the devices select
     get_pushbullet_devices();
+	
+    $('#testBetaSeries').click(function () {
+        $('#testBetaSeries-result').html(loading);
+        var betaseries_username = $("#betaseries_username").val();
+        var betaseries_password = $("#betaseries_password").val();
+
+        $.get(sbRoot + "/home/testBetaSeries", {'username': betaseries_username, 'password': betaseries_password},
+            function (data) { $('#testBetaSeries-result').html(data); });
+    });
 
     $('#email_show').change(function () {
         var key = parseInt($('#email_show').val(), 10);
