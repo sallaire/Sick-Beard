@@ -170,7 +170,9 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                             results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality, 'fr' ) )
                         else:
                             results.append( LIBERTALIASearchResult( self.opener, title, downloadURL, quality ) )
-                    
+        else:
+            logger.log(u"Pas de table trouvée ! je délogue", logger.DEBUG)
+            self.login_done = False             
         return results
     
     def getResult(self, episodes):
