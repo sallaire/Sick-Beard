@@ -45,7 +45,7 @@ NOTIFY_SUBTITLE_DOWNLOAD = 3
 
 notifyStrings = {}
 notifyStrings[NOTIFY_SNATCH] = "Download en cours"
-notifyStrings[NOTIFY_DOWNLOAD] = "Download finis"
+notifyStrings[NOTIFY_DOWNLOAD] = "Download fini"
 notifyStrings[NOTIFY_SUBTITLE_DOWNLOAD] = "Sous-titre"
 
 ### Episode statuses
