@@ -150,7 +150,16 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 #bypass first row because title only  
                 columns = row.find('td', {"class" : "torrent_name"} )                            
                 logger.log(u"LIBERTALIA found rows ! " , logger.DEBUG) 
-                link = columns.find("a",  href=re.compile("torrents"))                    
+                isvfclass = row.fid('td', {"class" : "sprite-vf"} )
+                isvostfrclass = row.fid('td', {"class" : "sprite-vostfr"} ) 
+                link = columns.find("a",  href=re.compile("torrents"))  
+                if isvostfrclass and french :
+                  link = columns.find("a",  href=re.compile("nepastrouver")) 
+                  logger.log(u"LIBERTALIA found VOSTFR et demande french je skip ! " + link.text, logger.DEBUG) 
+                if isvfclass  and french==None :
+                  link = columns.find("a",  href=re.compile("nepastrouver")) 
+                  logger.log(u"LIBERTALIA found VF et demande différent de french je skip ! " + link.text , logger.DEBUG)     
+                  
                 if link:               
                     title = link.text
                     recherched=searchUrl.split("&[PARAMSTR]=")[1]
