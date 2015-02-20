@@ -153,18 +153,23 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 isvfclass = row.find('td', {"class" : "sprite-vf"} )
                 isvostfrclass = row.find('td', {"class" : "sprite-vostfr"} ) 
                 link = columns.find("a",  href=re.compile("torrents"))  
-                if isvostfrclass and french :
-                  link = columns.find("a",  href=re.compile("nepastrouver")) 
-                  logger.log(u"LIBERTALIA found VOSTFR et demande french je skip ! " , logger.DEBUG) 
-                if isvfclass  and french==None :
-                  link = columns.find("a",  href=re.compile("nepastrouver")) 
-                  logger.log(u"LIBERTALIA found VF et demande différent de french je skip ! "  , logger.DEBUG)     
-                  
+                if link: 
+                  if isvostfrclass and french :
+                    logger.log(u"LIBERTALIA found VOSTFR et demande french je skip ! " + link.text, logger.DEBUG)
+                    link = columns.find("a",  href=re.compile("nepastrouver"))                     
+                if link:     
+                  if isvfclass  and french==None :                     
+                    logger.log(u"LIBERTALIA found VF et demande différent de french je skip ! " + link.text , logger.DEBUG)
+                    link = columns.find("a",  href=re.compile("nepastrouver"))
                 if link:               
                     title = link.text
                     recherched=searchUrl.split("&[PARAMSTR]=")[1]
                     recherched=recherched.replace(".","(.*)").replace(" ","(.*)").replace("'","(.*)")
                     logger.log(u"LIBERTALIA TITLE : " + title, logger.DEBUG)  
+                    if isvfclass : 
+                      logger.log(u"EPISODE EN VERSION FRENCH : " + title, logger.DEBUG)
+                    if isvostfrclass : 
+                      logger.log(u"EPISODE EN VERSION VOSTFR : " + title, logger.DEBUG)  
                     logger.log(u"LIBERTALIA CHECK MATCH : " + recherched, logger.DEBUG)                                        
                     #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']
                     if re.match(recherched,title , re.IGNORECASE):              
