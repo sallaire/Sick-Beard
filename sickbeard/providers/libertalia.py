@@ -166,10 +166,6 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                     recherched=searchUrl.split("&[PARAMSTR]=")[1]
                     recherched=recherched.replace(".","(.*)").replace(" ","(.*)").replace("'","(.*)")
                     logger.log(u"LIBERTALIA TITLE : " + title, logger.DEBUG)  
-                    if isvfclass : 
-                      logger.log(u"EPISODE EN VERSION FRENCH : " + title, logger.DEBUG)
-                    if isvostfrclass : 
-                      logger.log(u"EPISODE EN VERSION VOSTFR : " + title, logger.DEBUG)  
                     logger.log(u"LIBERTALIA CHECK MATCH : " + recherched, logger.DEBUG)                                        
                     #downloadURL =  self.url + "/" + row.find("a",href=re.compile("torrent_pass"))['href']
                     if re.match(recherched,title , re.IGNORECASE):              
