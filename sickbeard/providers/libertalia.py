@@ -154,13 +154,13 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 isvostfrclass = row.find('td', {"class" : "sprite-vostfr"} ) 
                 link = columns.find("a",  href=re.compile("torrents"))  
                 if link: 
-                  if isvostfrclass and french :
-                    logger.log(u"LIBERTALIA found VOSTFR et demande french je skip ! " + link.text, logger.DEBUG)
+                  if isvostfrclass and str(show.audio_lang)=='fr':
+                    logger.log(u"LIBERTALIA found VOSTFR et demande *"+str(show.audio_lang)+"* je skip ! " + link.text , logger.DEBUG)
                     link = columns.find("a",  href=re.compile("nepastrouver"))                     
                 if link:     
-                  if isvfclass  and french==None :                     
-                    logger.log(u"LIBERTALIA found VF et demande différent de french je skip ! " + link.text , logger.DEBUG)
-                    link = columns.find("a",  href=re.compile("nepastrouver"))
+                  if isvfclass  and  str(show.audio_lang)!=='fr'  :                     
+                    logger.log(u"LIBERTALIA found VF et demande *"+str(show.audio_lang)+"* je skip ! " + link.text , logger.DEBUG)
+                    link = columns.find("a",  href=re.compile("nepastrouver"))     
                 if link:               
                     title = link.text
                     recherched=searchUrl.split("&[PARAMSTR]=")[1]
