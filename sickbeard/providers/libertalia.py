@@ -158,7 +158,7 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                     logger.log(u"LIBERTALIA found VOSTFR et demande *"+str(show.audio_lang)+"* je skip ! " + link.text , logger.DEBUG)
                     link = columns.find("a",  href=re.compile("nepastrouver"))                     
                 if link:     
-                  if isvfclass  and  str(show.audio_lang)!=='fr'  :                     
+                  if isvfclass  and  str(show.audio_lang)!='fr'  :                     
                     logger.log(u"LIBERTALIA found VF et demande *"+str(show.audio_lang)+"* je skip ! " + link.text , logger.DEBUG)
                     link = columns.find("a",  href=re.compile("nepastrouver"))     
                 if link:               
