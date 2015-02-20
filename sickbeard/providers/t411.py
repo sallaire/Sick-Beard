@@ -39,7 +39,7 @@ class T411Provider(generic.TorrentProvider):
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         self.opener.addheaders = [('Content-Type', 'application/x-www-form-urlencoded'),('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.7) Gecko/20091221 Firefox/3.5.7 (.NET CLR 3.5.30729)')]
         
-        self.url = "http://www.t411.me"
+        self.url = "http://www.t411.io"
         
         self.login_done = False
         
@@ -133,7 +133,7 @@ class T411Provider(generic.TorrentProvider):
                 link = row.find("a", title=True)
                 title = link['title']
                 id = row.find_all('td')[2].find_all('a')[0]['href'][1:].replace('torrents/nfo/?id=','')
-                downloadURL = ('http://www.t411.me/torrents/download/?id=%s' % id)
+                downloadURL = ('http://www.t411.io/torrents/download/?id=%s' % id)
                 
                 quality = Quality.nameQuality( title )
                 if quality==Quality.UNKNOWN and title:
