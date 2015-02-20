@@ -155,10 +155,10 @@ class LIBERTALIAProvider(generic.TorrentProvider):
                 link = columns.find("a",  href=re.compile("torrents"))  
                 if isvostfrclass and french :
                   link = columns.find("a",  href=re.compile("nepastrouver")) 
-                  logger.log(u"LIBERTALIA found VOSTFR et demande french je skip ! " + link.text, logger.DEBUG) 
+                  logger.log(u"LIBERTALIA found VOSTFR et demande french je skip ! " , logger.DEBUG) 
                 if isvfclass  and french==None :
                   link = columns.find("a",  href=re.compile("nepastrouver")) 
-                  logger.log(u"LIBERTALIA found VF et demande différent de french je skip ! " + link.text , logger.DEBUG)     
+                  logger.log(u"LIBERTALIA found VF et demande différent de french je skip ! "  , logger.DEBUG)     
                   
                 if link:               
                     title = link.text
