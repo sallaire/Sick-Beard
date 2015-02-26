@@ -1535,12 +1535,13 @@ class ConfigNotifications:
                           use_nmj=None, nmj_host=None, nmj_database=None, nmj_mount=None, use_synoindex=None,
                           use_nmjv2=None, nmjv2_host=None, nmjv2_dbloc=None, nmjv2_database=None,
                           use_trakt=None, trakt_username=None, trakt_password=None, trakt_api=None,trakt_remove_watchlist=None,trakt_use_watchlist=None,trakt_start_paused=None,trakt_method_add=None,
+                          use_betaseries=None, betaseries_username=None, betaseries_password=None,
                           use_synologynotifier=None, synologynotifier_notify_onsnatch=None, synologynotifier_notify_ondownload=None, synologynotifier_notify_onsubtitledownload=None,
                           use_pytivo=None, pytivo_notify_onsnatch=None, pytivo_notify_ondownload=None, pytivo_notify_onsubtitledownload=None, pytivo_update_library=None, 
                           pytivo_host=None, pytivo_share_name=None, pytivo_tivo_name=None,
                           use_nma=None, nma_notify_onsnatch=None, nma_notify_ondownload=None, nma_notify_onsubtitledownload=None, nma_api=None, nma_priority=0,
                           use_pushalot=None, pushalot_notify_onsnatch=None, pushalot_notify_ondownload=None, pushalot_notify_onsubtitledownload=None, pushalot_authorizationtoken=None,
-                          use_pushbullet=None, pushbullet_notify_onsnatch=None, pushbullet_notify_ondownload=None, pushbullet_notify_onsubtitledownload=None, pushbullet_api=None, pushbullet_device=None, pushbullet_device_list=None,          
+                          use_pushbullet=None, pushbullet_notify_onsnatch=None, pushbullet_notify_ondownload=None, pushbullet_notify_onsubtitledownload=None, pushbullet_api=None, pushbullet_device=None, pushbullet_device_list=None, pushbullet_channel_list=None,      
                           use_mail=None, mail_username=None, mail_password=None, mail_server=None, mail_ssl=None, mail_from=None, mail_to=None, mail_notify_onsnatch=None ):
 
 
@@ -1761,6 +1762,11 @@ class ConfigNotifications:
         else:
             trakt_start_paused = 0
 
+        if use_betaseries == "on":
+            use_betaseries = 1
+        else:
+            use_betaseries = 0
+
         if use_pytivo == "on":
             use_pytivo = 1
         else:
@@ -1971,6 +1977,10 @@ class ConfigNotifications:
         sickbeard.TRAKT_METHOD_ADD = trakt_method_add
         sickbeard.TRAKT_START_PAUSED = trakt_start_paused
 
+        sickbeard.USE_BETASERIES = use_betaseries
+        sickbeard.BETASERIES_USERNAME = betaseries_username
+        sickbeard.BETASERIES_PASSWORD = betaseries_password
+
         sickbeard.USE_PYTIVO = use_pytivo
         sickbeard.PYTIVO_NOTIFY_ONSNATCH = pytivo_notify_onsnatch == "off"
         sickbeard.PYTIVO_NOTIFY_ONDOWNLOAD = pytivo_notify_ondownload ==  "off"
@@ -2008,6 +2018,7 @@ class ConfigNotifications:
         sickbeard.PUSHBULLET_NOTIFY_ONSUBTITLEDOWNLOAD = pushbullet_notify_onsubtitledownload
         sickbeard.PUSHBULLET_API = pushbullet_api
         sickbeard.PUSHBULLET_DEVICE = pushbullet_device_list
+        sickbeard.PUSHBULLET_CHANNEL = pushbullet_channel_list
 
         sickbeard.save_config()
 
@@ -2856,6 +2867,16 @@ class Home:
             return "Test notice failed to Trakt"
 
     @cherrypy.expose
+    def testBetaSeries(self, username=None, password=None):
+        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
+
+        result = notifiers.betaseries_notifier.test_notify(username, password)
+        if result:
+            return "Test notice sent successfully to BetaSeries"
+        else:
+            return "Test notice failed to BetaSeries"
+
+    @cherrypy.expose
     def testMail(self, mail_from=None, mail_to=None, mail_server=None, mail_ssl=None, mail_user=None, mail_password=None):
         cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
 
@@ -2903,6 +2924,18 @@ class Home:
         cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
 
         result = notifiers.pushbullet_notifier.get_devices(api)
+        if result:
+            return result
+        else:
+            return "Error sending Pushbullet notification"
+
+    @cherrypy.expose
+
+    #get channels
+    def getPushbulletChannels(self, api=None):
+        cherrypy.response.headers['Cache-Control'] = "max-age=0,no-cache,no-store"
+
+        result = notifiers.pushbullet_notifier.get_channels(api)
         if result:
             return result
         else:
@@ -3935,7 +3968,7 @@ class WebInterface:
         myDB = db.DBConnection()
         
         # Limit dates
-        past_date = (datetime.date.today() + datetime.timedelta(weeks=-52)).toordinal()
+        past_date = (datetime.date.today() + datetime.timedelta(weeks=-2)).toordinal()
         future_date = (datetime.date.today() + datetime.timedelta(weeks=52)).toordinal()
         
         # Get all the shows that are not paused and are currently on air (from kjoconnor Fork)
@@ -3943,16 +3976,17 @@ class WebInterface:
         for show in calendar_shows:
             # Get all episodes of this show airing between today and next month
             episode_list = myDB.select("SELECT tvdbid, name, season, episode, description, airdate FROM tv_episodes WHERE airdate >= ? AND airdate < ? AND showid = ?", (past_date, future_date, int(show["tvdb_id"])))
+            
+            # Get local timezone and load network timezones
+            local_zone = tz.tzlocal() 
+            try:
+                network_zone = network_timezones.get_network_timezone(show['network'], network_timezones.load_network_dict(), local_zone)
+            except:
+                # Dummy network_zone for exceptions
+                network_zone = None
 
             for episode in episode_list:
                 
-                # Get local timezone and load network timezones
-                local_zone = tz.tzlocal() 
-                try:
-                    network_zone = network_timezones.get_network_timezone(show['network'], network_timezones.load_network_dict(), local_zone)
-                except:
-                    # Dummy network_zone for exceptions
-                    network_zone = None
                 
                 # Get the air date and time
                 air_date = datetime.datetime.fromordinal(int(episode['airdate']))
