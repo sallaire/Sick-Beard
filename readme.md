@@ -1,6 +1,6 @@
 ![preview thumb](http://i.imgur.com/OeXSAkU.png)
 
-SickBeard VO/VF by sarakha63
+SickBeard VO/VF by sallaire
 =====
 
 This version is based on Midgetspy's and mr-oranges work:
