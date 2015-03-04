@@ -30,6 +30,7 @@ class DelugeAPI(GenericClient):
         super(DelugeAPI, self).__init__('Deluge', host, username, password)
                 
         self.url = self.host + 'json'
+        self.id = None
            
     def _get_auth(self):
 
@@ -54,7 +55,8 @@ class DelugeAPI(GenericClient):
                                 })
         self._request(method='post', data=post_data)
         
-        return self.response.json['result']
+        self.id = self.response.json['result']
+        return self.id
             
     def _add_torrent_file(self, result):
 
@@ -64,7 +66,8 @@ class DelugeAPI(GenericClient):
                                 })           
         self._request(method='post', data=post_data)
         
-        return self.response.json['result']
+        self.id = self.response.json['result']
+        return self.id
     
     def _set_torrent_label(self, result):
         
@@ -90,7 +93,7 @@ class DelugeAPI(GenericClient):
                                 
                 # add label to torrent    
                 post_data = json.dumps({ "method": 'label.set_torrent',
-                                         "params": [result.hash, label],
+                                         "params": [self.id, label],
                                          "id": 5
                                              })
                 self._request(method='post', data=post_data)
@@ -106,13 +109,13 @@ class DelugeAPI(GenericClient):
 
         if sickbeard.TORRENT_RATIO:
             post_data = json.dumps({"method": "core.set_torrent_stop_at_ratio",
-                                    "params": [result.hash, True],
+                                    "params": [self.id, True],
                                     "id": 5
                                     })        
             self._request(method='post', data=post_data)
                 
             post_data = json.dumps({"method": "core.set_torrent_stop_ratio",
-                                    "params": [result.hash,float(sickbeard.TORRENT_RATIO)],
+                                    "params": [self.id,float(sickbeard.TORRENT_RATIO)],
                                     "id": 6
                                     })        
             self._request(method='post', data=post_data)
@@ -125,13 +128,13 @@ class DelugeAPI(GenericClient):
 
         if sickbeard.TORRENT_PATH:
             post_data = json.dumps({"method": "core.set_torrent_move_completed",
-                                    "params": [result.hash, True],
+                                    "params": [self.id, True],
                                     "id": 7
                                    })        
             self._request(method='post', data=post_data)
                 
             post_data = json.dumps({"method": "core.set_torrent_move_completed_path",
-                                    "params": [result.hash, sickbeard.TORRENT_PATH],
+                                    "params": [self.id, sickbeard.TORRENT_PATH],
                                     "id": 8
                                     })        
             self._request(method='post', data=post_data)
@@ -144,7 +147,7 @@ class DelugeAPI(GenericClient):
             
         if sickbeard.TORRENT_PAUSED:
             post_data = json.dumps({"method": "core.pause_torrent",
-                                    "params": [[result.hash]],
+                                    "params": [[self.id]],
                                     "id": 9
                                     })
             self._request(method='post', data=post_data)
