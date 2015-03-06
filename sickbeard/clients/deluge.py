@@ -125,8 +125,12 @@ class DelugeAPI(GenericClient):
         return True
 
     def _set_torrent_path(self, result):
+        moveFolder = result.episodes[0].show._location + '/' + result.episodes[0].season
 
         if sickbeard.TORRENT_PATH:
+            moveFolder =  sickbeard.TORRENT_PATH
+        
+        if moveFolder:
             post_data = json.dumps({"method": "core.set_torrent_move_completed",
                                     "params": [self.id, True],
                                     "id": 7
@@ -134,7 +138,7 @@ class DelugeAPI(GenericClient):
             self._request(method='post', data=post_data)
                 
             post_data = json.dumps({"method": "core.set_torrent_move_completed_path",
-                                    "params": [self.id, sickbeard.TORRENT_PATH],
+                                    "params": [self.id, moveFolder],
                                     "id": 8
                                     })        
             self._request(method='post', data=post_data)
