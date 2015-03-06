@@ -125,7 +125,7 @@ class DelugeAPI(GenericClient):
         return True
 
     def _set_torrent_path(self, result):
-        
+        moveFolder = result.episodes[0].show._location + ('/Saison_%s' % result.episodes[0].season)
 
         if sickbeard.TORRENT_PATH:
             moveFolder =  sickbeard.TORRENT_PATH
