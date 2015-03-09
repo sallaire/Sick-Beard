@@ -496,7 +496,29 @@
                                     <span class="component-desc"><b>Note:</b> Label plugin must be enabled in Deluge client</span>
                                 </label>
                             </div>
+                            
+                            <div class="field-pair" id="Torrent_Move_Show">
+                                <label class="nocheck clearfix">
+                                    <span class="component-title" id="torrent_move_show_desc">Move in show directory</span>
+                                    <input type="checkbox" name="torrent_move_show" class="enabler" id="torrent_move_show" #if $sickbeard.TORRENT_MOVE_SHOW == True then "checked=\"checked\"" else ""# />
+                                </label>
+                                <label class="nocheck clearfix">
+                                    <span class="component-title">&nbsp;</span>
+                                    <span class="component-desc">Move Torrent directly in show directory ?</span>
+                                </label>
+                            </div>
 
+                        	<div class="field-pair" id="Torrent_Move_Show_Path">
+                                <label class="nocheck clearfix">
+                                    <span class="component-title" id="torrent_move_show_path_desc">Season Directory</span>
+                                    <input type="text" name="torrent_move_show_path" id="torrent_move_show_path" value="$sickbeard.TORRENT_MOVE_SHOW_PATH" size="35" />
+                                </label>
+                                <label class="nocheck clearfix">
+                                    <span class="component-title">&nbsp;</span>
+                                    <span class="component-desc">Season pattern (where %s is the season number) (blank to put all seasons in show root directory)</span>
+                                </label>
+                            </div>
+                            
                         	<div class="field-pair" id="Torrent_Path">
                                 <label class="nocheck clearfix">
                                     <span class="component-title" id="directory_desc">Torrent Directory</span>

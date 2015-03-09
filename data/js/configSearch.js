@@ -35,6 +35,16 @@ $(document).ready(function(){
         }
 
     }
+    
+    $('#torrent_move_show').change(function(){
+    	if (this.checked) {
+    		 $('#Torrent_Path').hide();
+    		 $('#Torrent_Move_Show_Path').show();
+    	} else {
+    		$('#Torrent_Move_Show_Path').hide();
+    		$('#Torrent_Path').show();
+    	}
+    });
 
     $.fn.torrent_method_handler = function() {
         
@@ -45,6 +55,8 @@ $(document).ready(function(){
             $('#torrent_settings').hide();
             $('#ftp_blackhole_settings').hide();
             $('#desc_torrent_dir').text('TORRENT Black Hole');
+            $('#Torrent_Move_Show').hide();
+            $('#Torrent_Move_Show_Path').hide();
         } else if (selectedProvider == "utorrent") {
             $('#t_blackhole_settings').hide();
             $('#torrent_settings').show();
@@ -58,6 +70,8 @@ $(document).ready(function(){
             $('#password_desc').text('uTorrent Password');
             $('#ftp_blackhole_settings').hide();
             $('#label_desc').text('uTorrent Label');
+            $('#Torrent_Move_Show').hide();
+            $('#Torrent_Move_Show_Path').hide();
         } else if (selectedProvider == "transmission"){
             $('#t_blackhole_settings').hide();
             $('#torrent_settings').show();
@@ -71,6 +85,8 @@ $(document).ready(function(){
             $('#password_desc').text('Transmission Password');
             $('#directory_desc').text('Transmission Directory');
             $('#ftp_blackhole_settings').hide();
+            $('#Torrent_Move_Show').hide();
+            $('#Torrent_Move_Show_Path').hide();
         } else if (selectedProvider == "deluge"){
             $('#t_blackhole_settings').hide();
             $('#torrent_settings').show();
@@ -85,6 +101,9 @@ $(document).ready(function(){
             $('#label_desc').text('Deluge Label');
             $('#directory_desc').text('Deluge Directory');
             $('#ftp_blackhole_settings').hide();
+            $('#Torrent_Move_Show_Path').show();
+            $('#Torrent_Move_Show').show();
+            $('#torrent_move_show').trigger('change');
         } else if (selectedProvider == "download_station"){
             $('#t_blackhole_settings').hide();
             $('#torrent_settings').show();
@@ -101,12 +120,16 @@ $(document).ready(function(){
             $('#label_desc').text('Synology Label');
             $('#directory_desc').text('Synology Directory');
             $('#ftp_blackhole_settings').hide();
+            $('#Torrent_Move_Show').hide();
+            $('#Torrent_Move_Show_Path').hide();
         } else if (selectedProvider == "ftpblackhole"){
             $('#t_blackhole_settings').show();
             $('#torrent_settings').hide();
             $('#ftp_blackhole_settings').show();
             $('#desc_torrent_dir').text('FTP blackhole directory');
             $('#t_blackhole_submit').hide();
+            $('#Torrent_Move_Show').hide();
+            $('#Torrent_Move_Show_Path').hide();
         }
     }
 
@@ -133,7 +156,7 @@ $(document).ready(function(){
     $('#use_torrents').click(function(){
     	toggle_torrent_title();
     });
-
+    
     $('#testTorrent').click(function(){
         $('#testTorrent-result').html(loading);
         var torrent_method = $('#torrent_method :selected').val();
@@ -147,5 +170,6 @@ $(document).ready(function(){
     $('#prefered_method').change($(this).prefered_method_handler);
 	
 	$(this).prefered_method_handler();
+	 $("#torrent_move_show").trigger("change");
 
 });

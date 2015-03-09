@@ -1015,7 +1015,7 @@ class ConfigSearch:
                        sab_apikey=None, sab_category=None, sab_host=None, nzbget_password=None, nzbget_category=None, nzbget_host=None,
                        torrent_dir=None,torrent_method=None, nzb_method=None, usenet_retention=None, search_frequency=None, french_delay=None, 
                        download_propers=None, download_french=None, torrent_username=None, torrent_password=None, torrent_host=None, 
-                       torrent_label=None, torrent_path=None, torrent_custom_url=None, torrent_ratio=None, torrent_paused=None, ignore_words=None, 
+                       torrent_label=None, torrent_path=None, torrent_custom_url=None, torrent_ratio=None, torrent_paused=None, torrent_move_show=None, torrent_move_show_path=None, ignore_words=None, 
                        prefered_method=None, torrent_use_ftp = None, ftp_host=None, ftp_port=None, ftp_timeout=None, ftp_passive = None, ftp_login=None, 
                        ftp_password=None, ftp_remotedir=None):
 
@@ -1109,6 +1109,12 @@ class ConfigSearch:
         else:
             torrent_paused = 0
         sickbeard.TORRENT_PAUSED = torrent_paused
+        if torrent_move_show == "on":
+            torrent_move_show = 1
+        else:
+            torrent_move_show = 0
+        sickbeard.TORRENT_MOVE_SHOW = torrent_move_show
+        sickbeard.TORRENT_MOVE_SHOW_PATH = torrent_move_show_path
 
         if torrent_host and not re.match('https?://.*', torrent_host):
             torrent_host = 'http://' + torrent_host

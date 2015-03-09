@@ -281,6 +281,8 @@ TORRENT_CUSTOM_URL = False
 TORRENT_RATIO = ''
 TORRENT_PAUSED = False
 TORRENT_LABEL = ''
+TORRENT_MOVE_SHOW = False
+TORRENT_MOVE_SHOW_PATH = ''
 
 USE_XBMC = False
 XBMC_NOTIFY_ONSNATCH = False
@@ -478,7 +480,7 @@ def initialize(consoleLogging=True):
                 USE_NZBS, USE_TORRENTS, NZB_METHOD, NZB_DIR, DOWNLOAD_PROPERS, DOWNLOAD_FRENCH, TORRENT_METHOD, PREFERED_METHOD, \
                 SAB_USERNAME, SAB_PASSWORD, SAB_APIKEY, SAB_CATEGORY, SAB_HOST, \
                 NZBGET_PASSWORD, NZBGET_CATEGORY, NZBGET_HOST, currentSearchScheduler, backlogSearchScheduler, \
-                TORRENT_USERNAME, TORRENT_PASSWORD, TORRENT_HOST, TORRENT_PATH, TORRENT_CUSTOM_URL, TORRENT_RATIO, TORRENT_PAUSED, TORRENT_LABEL, \
+                TORRENT_USERNAME, TORRENT_PASSWORD, TORRENT_HOST, TORRENT_PATH, TORRENT_CUSTOM_URL, TORRENT_RATIO, TORRENT_PAUSED, TORRENT_LABEL, TORRENT_MOVE_SHOW, TORRENT_MOVE_SHOW_PATH,\
                 USE_XBMC, XBMC_NOTIFY_ONSNATCH, XBMC_NOTIFY_ONDOWNLOAD, XBMC_NOTIFY_ONSUBTITLEDOWNLOAD, XBMC_UPDATE_FULL, XBMC_UPDATE_ONLYFIRST, \
                 XBMC_UPDATE_LIBRARY, XBMC_HOST, XBMC_USERNAME, XBMC_PASSWORD, \
                 USE_TRAKT, TRAKT_USERNAME, TRAKT_PASSWORD, TRAKT_API,TRAKT_REMOVE_WATCHLIST,TRAKT_USE_WATCHLIST,TRAKT_METHOD_ADD,TRAKT_START_PAUSED,traktWatchListCheckerSchedular, \
@@ -870,6 +872,8 @@ def initialize(consoleLogging=True):
         TORRENT_RATIO = check_setting_str(CFG, 'TORRENT', 'torrent_ratio', '')
         TORRENT_PAUSED = bool(check_setting_int(CFG, 'TORRENT', 'torrent_paused', 0)) 
         TORRENT_LABEL = check_setting_str(CFG, 'TORRENT', 'torrent_label', '')
+        TORRENT_MOVE_SHOW = bool(check_setting_int(CFG, 'TORRENT', 'torrent_move_show', 0)) 
+        TORRENT_MOVE_SHOW_PATH = check_setting_str(CFG, 'TORRENT', 'torrent_move_show_path', '')
         
         USE_XBMC = bool(check_setting_int(CFG, 'XBMC', 'use_xbmc', 0))
         XBMC_NOTIFY_ONSNATCH = bool(check_setting_int(CFG, 'XBMC', 'xbmc_notify_onsnatch', 0))
@@ -1631,6 +1635,8 @@ def save_config():
     new_config['TORRENT']['torrent_ratio'] = TORRENT_RATIO
     new_config['TORRENT']['torrent_paused'] = int(TORRENT_PAUSED)
     new_config['TORRENT']['torrent_label'] = TORRENT_LABEL
+    new_config['TORRENT']['torrent_move_show'] = int(TORRENT_MOVE_SHOW)
+    new_config['TORRENT']['torrent_move_show_path'] = TORRENT_MOVE_SHOW_PATH
 
     new_config['XBMC'] = {}
     new_config['XBMC']['use_xbmc'] = int(USE_XBMC)
