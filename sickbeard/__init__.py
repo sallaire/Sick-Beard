@@ -33,7 +33,7 @@ from sickbeard import providers, metadata
 from providers import ezrss, tvtorrents, torrentleech, btn, nzbsrus, newznab, womble, nzbx, omgwtfnzbs, binnewz, t411, ftdb, libertalia, tpi, fnt, addict, cpasbien, piratebay, gks, kat, ethor, xthor, thinkgeek
 from sickbeard.config import CheckSection, check_setting_int, check_setting_str, ConfigMigrator
 
-from sickbeard import searchCurrent, searchBacklog, showUpdater, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
+from sickbeard import searchCurrent, searchBacklog, showUpdater, showRefresher, versionChecker, properFinder, frenchFinder, autoPostProcesser, subtitles, traktWatchListChecker, SentFTPChecker
 from sickbeard import helpers, db, exceptions, show_queue, search_queue, scheduler
 from sickbeard import logger
 from sickbeard import naming
@@ -71,6 +71,7 @@ NO_RESIZE = False
 backlogSearchScheduler = None
 currentSearchScheduler = None
 showUpdateScheduler = None
+showRefreshScheduler = None
 versionCheckScheduler = None
 showQueueScheduler = None
 searchQueueScheduler = None
@@ -487,7 +488,7 @@ def initialize(consoleLogging=True):
                 USE_BETASERIES, BETASERIES_USERNAME, BETASERIES_PASSWORD, BETASERIES_API, \
                 USE_PLEX, PLEX_NOTIFY_ONSNATCH, PLEX_NOTIFY_ONDOWNLOAD, PLEX_NOTIFY_ONSUBTITLEDOWNLOAD, PLEX_UPDATE_LIBRARY, \
                 PLEX_SERVER_HOST, PLEX_HOST, PLEX_USERNAME, PLEX_PASSWORD, \
-                showUpdateScheduler, __INITIALIZED__, LAUNCH_BROWSER, UPDATE_SHOWS_ON_START, SORT_ARTICLE, FRENCH_COLUMN, showList, loadingShowList, \
+                showUpdateScheduler, showRefreshScheduler,  __INITIALIZED__, LAUNCH_BROWSER, UPDATE_SHOWS_ON_START, SORT_ARTICLE, FRENCH_COLUMN, showList, loadingShowList, \
                 NZBS, NZBS_UID, NZBS_HASH, EZRSS, TVTORRENTS, TVTORRENTS_DIGEST, TVTORRENTS_HASH, BTN, BTN_API_KEY, TORRENTLEECH, TORRENTLEECH_KEY, ETHOR, ETHOR_KEY, TORRENT_DIR, USENET_RETENTION, SOCKET_TIMEOUT, \
 				BINNEWZ, \
                 T411, T411_USERNAME, T411_PASSWORD, \
@@ -1096,10 +1097,14 @@ def initialize(consoleLogging=True):
                                                    threadName="SHOWUPDATER",
                                                    runImmediately=False)
             
-
         versionCheckScheduler = scheduler.Scheduler(versionChecker.CheckVersion(),
                                                      cycleTime=datetime.timedelta(hours=12),
                                                      threadName="CHECKVERSION",
+                                                     runImmediately=True)    
+
+        showRefreshScheduler = scheduler.Scheduler(showRefresher.ShowRefresher(),
+                                                     cycleTime=datetime.timedelta(hours=1),
+                                                     threadName="SHOWREFRESHER",
                                                      runImmediately=True)
 
         showQueueScheduler = scheduler.Scheduler(show_queue.ShowQueue(),
@@ -1168,7 +1173,7 @@ def initialize(consoleLogging=True):
 def start():
 
     global __INITIALIZED__, currentSearchScheduler, backlogSearchScheduler, \
-            showUpdateScheduler, versionCheckScheduler, showQueueScheduler, \
+            showUpdateScheduler, showRefreshScheduler, versionCheckScheduler, showQueueScheduler, \
             frenchFinderScheduler, properFinderScheduler, autoPostProcesserScheduler, autoTorrentPostProcesserScheduler, searchQueueScheduler, \
             subtitlesFinderScheduler, started, USE_SUBTITLES, \
             traktWatchListCheckerSchedular, started, \
@@ -1186,6 +1191,9 @@ def start():
 
             # start the show updater
             showUpdateScheduler.thread.start()
+            
+            # start the show refresher
+            showRefreshScheduler.thread.start()
 
             # start the version checker
             versionCheckScheduler.thread.start()
@@ -1225,7 +1233,7 @@ def start():
 
 def halt():
 
-    global __INITIALIZED__, currentSearchScheduler, backlogSearchScheduler, showUpdateScheduler, \
+    global __INITIALIZED__, currentSearchScheduler, backlogSearchScheduler, showUpdateScheduler, showRefreshScheduler, \
             showQueueScheduler, frenchFinderScheduler, properFinderScheduler, autoPostProcesserScheduler, autoTorrentPostProcesserScheduler, searchQueueScheduler, \
             subtitlesFinderScheduler, started, \
             traktWatchListCheckerSchedular
@@ -1256,6 +1264,13 @@ def halt():
             logger.log(u"Waiting for the SHOWUPDATER thread to exit")
             try:
                 showUpdateScheduler.thread.join(10)
+            except:
+                pass
+            
+            showRefreshScheduler.abort = True
+            logger.log(u"Waiting for the SHOWREFRESHER thread to exit")
+            try:
+                showRefreshScheduler.thread.join(10)
             except:
                 pass
 

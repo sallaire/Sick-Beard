@@ -141,6 +141,14 @@ class TVShow(object):
                 self.episodes[curSeason][curEp] = None
                 del myEp
 
+    def hasSnatchedEpisodes(self):
+        myDB = db.DBConnection()
+        
+        sql_selection = "SELECT COUNT(*) FROM tv_episodes where showid = " + str(self.tvdbid) + " AND (status % 100) IN (" + str(SNATCHED) + "," + str(SNATCHED_PROPER) + "," + str(SNATCHED_FRENCH) + ")"
+        count = myDB.select(sql_selection)
+                
+        return (count[0][0] > 0)
+    
     def getAllEpisodes(self, season=None, has_location=False):
 
         myDB = db.DBConnection()
@@ -631,6 +639,7 @@ class TVShow(object):
                     with curEp.lock:
                         logger.log(u"STATUS: we have an associated file, so setting the status from "+str(curEp.status)+" to DOWNLOADED/" + str(Quality.statusFromName(file)), logger.DEBUG)
                         curEp.status = Quality.compositeStatus(newStatus, newQuality)
+                        history.logDownload(curEp, file, newQuality, parse_result.release_group)
 
             with curEp.lock:
                 curEp.saveToDB()
