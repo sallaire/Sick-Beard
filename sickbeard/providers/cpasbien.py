@@ -60,8 +60,9 @@ class CpasbienProvider(generic.TorrentProvider):
 
         showNames = show_name_helpers.allPossibleShowNames(ep_obj.show)
         for showName in showNames:
-            strings.append("%s S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode) )
-            strings.append("%s %dx%d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode ) )
+            logger.log(u"Show name: " + showName, logger.DEBUG)
+            strings.append("%s-S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode) )
+            strings.append("%s-%dx%d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode ) )
 
         return strings
     
@@ -74,12 +75,14 @@ class CpasbienProvider(generic.TorrentProvider):
     def _doSearch(self, searchString, show=None, season=None, french=None):
 
         results = []
-        searchUrl = self.url + '/recherche/'
+        searchUrl = self.url + '/recherche/' + searchString + ".html"
         
-        data = urllib.urlencode({'champ_recherche': searchString.replace('!','')})
-        req = urllib2.Request(searchUrl, data, headers={'User-Agent' : "Mozilla/5.0"})
+        #data = urllib.urlencode({'champ_recherche': searchString.replace('!','')})
+        logger.log(u"Search string: " + searchUrl, logger.DEBUG)
+        r = self.opener.open( searchUrl )
+        #req = urllib2.Request(searchUrl, None, headers={'User-Agent' : "Mozilla/5.0"})
         try:
-            soup = BeautifulSoup( urllib2.urlopen(req) )
+            soup = BeautifulSoup( r, "html.parser" )
         except Exception, e:
             logger.log(u"Error trying to load cpasbien response: "+str(e), logger.ERROR)
             return []
@@ -100,12 +103,12 @@ class CpasbienProvider(generic.TorrentProvider):
                 erlin=1
         for row in resultdiv:
             link = row.find("a", title=True)
-            title = str(link.text).lower().strip()  
+            title = str(link.text).lower().strip()
             pageURL = link['href']
 
-            if "vostfr" in title and ((not show.subtitles) or show.audio_lang == "fr" or french):
+            if "vostfr" in title and (show.audio_lang == "fr" or french):
                 continue
-            if "french" in title and show.audio_lang == "en" and (not french):
+            if "french" in title and (show.audio_lang == "en" or (not french)):
                 continue
 
             #downloadTorrentLink = torrentSoup.find("a", title.startswith('Cliquer'))
@@ -136,6 +139,7 @@ class CpasbienProvider(generic.TorrentProvider):
                 else:
                     quality = Quality.SDTV
 
+                logger.log(u"Torrent url used: " + downloadURL, logger.DEBUG)
                 if show and french==None:
                     results.append( CpasbienSearchResult( self.opener, title, downloadURL, quality, str(show.audio_lang) ) )
                 elif show and french:
