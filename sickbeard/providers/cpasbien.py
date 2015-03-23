@@ -18,7 +18,7 @@
 # along with Sick Beard.  If not, see <http://www.gnu.org/licenses/>.
 
 from bs4 import BeautifulSoup
-from sickbeard import logger, classes, show_name_helpers
+from sickbeard import logger, classes, show_name_helpers, helpers
 from sickbeard.common import Quality
 from sickbeard.exceptions import ex
 import cookielib
@@ -61,8 +61,7 @@ class CpasbienProvider(generic.TorrentProvider):
         showNames = show_name_helpers.allPossibleShowNames(ep_obj.show)
         for showName in showNames:
             logger.log(u"Show name: " + showName, logger.DEBUG)
-            strings.append("%s-S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode) )
-            strings.append("%s-%dx%d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode ) )
+            strings.append("%s S%02dE%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode) )
 
         return strings
     
@@ -75,7 +74,7 @@ class CpasbienProvider(generic.TorrentProvider):
     def _doSearch(self, searchString, show=None, season=None, french=None):
 
         results = []
-        searchUrl = self.url + '/recherche/' + searchString + ".html"
+        searchUrl = self.url + '/recherche/' + searchString.replace(' ','-') + ".html"
         
         #data = urllib.urlencode({'champ_recherche': searchString.replace('!','')})
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
