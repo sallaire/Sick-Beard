@@ -24,7 +24,7 @@ import re, socket
 import shutil
 import traceback
 import time, sys
-from lib.linktastic import linktastic 
+from lib.linktastic import linktastic
 
 import hashlib
 
@@ -42,13 +42,13 @@ from sickbeard import db
 from sickbeard import encodingKludge as ek
 from sickbeard import notifiers
 
-#from lib.linktastic import linktastic
 from lib.tvdb_api import tvdb_api, tvdb_exceptions
 
 import xml.etree.cElementTree as etree
 
 from lib import subliminal
-#from sickbeard.subtitles import EXTENSIONS
+
+from subprocess import call
 
 urllib._urlopener = classes.SickBeardURLopener()
 
@@ -118,14 +118,14 @@ def sanitizeFileName (name):
     >>> sanitizeFileName('.a.b..')
     'a.b'
     '''
-    
+
     # remove bad chars from the filename
     name = re.sub(r'[\\/\*]', '-', name)
     name = re.sub(r'[:"<>|?]', '', name)
-    
+
     # remove leading/trailing periods and spaces
     name = name.strip(' .')
-    
+
     return name
 
 
@@ -220,7 +220,7 @@ def download_file(url, filename):
         _remove_file_failed(filename)
         logger.log(u"Unknown exception while loading URL " + url + ": " + traceback.format_exc(), logger.WARNING)
         return False
-    
+
     return True
 
 def findCertainShow (showList, tvdbid):
@@ -490,16 +490,32 @@ def hardlinkFile(srcFile, destFile):
         logger.log(u"Failed to create hardlink of " + srcFile + " at " + destFile + ". Copying instead", logger.ERROR)
         copyFile(srcFile, destFile)
         ek.ek(os.unlink, srcFile)
- 
+
 def moveAndSymlinkFile(srcFile, destFile):
+    """
+    Move a file from source to destination, then create a symlink back from destination from source. If this fails, copy
+    the file from source to destination
+    :param srcFile: Source file
+    :param destFile: Destination file
+    """
+
     try:
-        ek.ek(os.rename, srcFile, destFile)
+        call(["mv", srcFile, destFile])
+    except Exception as e:
+        logger.log(traceback.format_exc(), logger.DEBUG)
+        raise
+
+    try:
         fixSetGroupID(destFile)
-        ek.ek(linktastic.symlink, destFile, srcFile)
-    except OSError:
-        logger.log(u"Failed to create symlink of " + srcFile + " at " + destFile + ". Copying instead", logger.ERROR)
-        copyFile(srcFile, destFile)
-        ek.ek(os.unlink, srcFile)
+    except Exception as e:
+        logger.log(u"Failed to fixGroup")
+        raise
+
+    try:
+        call(["ln", "-sf", destFile, srcFile])
+    except Exception as e:
+        logger.log(u"Failed to create symlink of " + destFile.decode('utf-8') + " at " + srcFile.decode('utf-8'))
+        raise
 
 def del_empty_dirs(s_dir):
     b_empty = True
@@ -580,14 +596,14 @@ def rename_ep_file(cur_path, new_path):
     if cur_file_ext[1:] in subtitleExtensions:
         #Extract subtitle language from filename
         sublang = os.path.splitext(cur_file_name)[1][1:]
-        
+
         #Check if the language extracted from filename is a valid language
         try:
             language = subliminal.language.Language(sublang, strict=True)
-            cur_file_ext = '.'+sublang+cur_file_ext 
+            cur_file_ext = '.'+sublang+cur_file_ext
         except ValueError:
             pass
-        
+
     # put the extension on the incoming file
     new_path += cur_file_ext
 
@@ -645,13 +661,13 @@ def chmodAsParent(childPath):
         return
 
     parentPath = ek.ek(os.path.dirname, childPath)
-    
+
     if not parentPath:
         logger.log(u"No parent path provided in "+childPath+", unable to get permissions from it", logger.DEBUG)
         return
-    
+
     parentMode = stat.S_IMODE(os.stat(parentPath)[stat.ST_MODE])
-    
+
     childPathStat = ek.ek(os.stat, childPath)
     childPath_mode = stat.S_IMODE(childPathStat[stat.ST_MODE])
 
@@ -715,9 +731,9 @@ def fixSetGroupID(childPath):
 def sanitizeSceneName (name, ezrss=False):
     """
     Takes a show name and returns the "scenified" version of it.
-    
+
     ezrss: If true the scenified version will follow EZRSS's cracksmoker rules as best as possible
-    
+
     Returns: A string containing the scene version of the show name given.
     """
 
@@ -774,19 +790,19 @@ def create_https_certificates(ssl_cert, ssl_key):
 if __name__ == '__main__':
     import doctest
     doctest.testmod()
-    
+
 def getAllLanguages ():
     """
     Returns all show languages where an episode is wanted or unaired
-    
+
     Returns: A list of all language codes
     """
     myDB = db.DBConnection()
-    
+
     sqlLanguages = myDB.select("SELECT DISTINCT(t.audio_lang) FROM tv_shows t, tv_episodes e WHERE t.tvdb_id = e.showid AND (e.status = ? OR e.status = ?)", [common.UNAIRED,common.WANTED])
-    
+
     languages = map(lambda x: str(x["audio_lang"]), sqlLanguages)
-    
+
     return languages
 
 
@@ -799,9 +815,9 @@ def get_xml_text(node):
 
 def backupVersionedFile(oldFile, version):
     numTries = 0
-    
+
     newFile = oldFile + '.' + 'v'+str(version)
-    
+
     while not ek.ek(os.path.isfile, newFile):
         if not ek.ek(os.path.isfile, oldFile):
             break
@@ -827,7 +843,7 @@ def tryInt(s, s_default = 0):
 
 # generates a md5 hash of a file
 def md5_for_file(filename, block_size=2**16):
-    try:    
+    try:
         with open(filename,'rb') as f:
             md5 = hashlib.md5()
             while True:
@@ -839,4 +855,3 @@ def md5_for_file(filename, block_size=2**16):
             return md5.hexdigest()
     except Exception:
         return None
-
