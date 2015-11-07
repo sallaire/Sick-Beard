@@ -30,22 +30,22 @@ import urllib2
 class T411Provider(generic.TorrentProvider):
 
     def __init__(self):
-        
+
         generic.TorrentProvider.__init__(self, "T411")
 
         self.supportsBacklog = True
-        
+
         self.cj = cookielib.CookieJar()
         self.opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(self.cj))
         self.opener.addheaders = [('Content-Type', 'application/x-www-form-urlencoded'),('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.1.7) Gecko/20091221 Firefox/3.5.7 (.NET CLR 3.5.30729)')]
-        
-        self.url = "http://www.t411.io"
-        
+
+        self.url = "http://www.t411.in"
+
         self.login_done = False
-        
+
     def isEnabled(self):
         return sickbeard.T411
-    
+
     def getSearchParams(self, searchString, audio_lang, subcat, french=None):
         if audio_lang == "en" and french==None:
             return urllib.urlencode( {'search': searchString, 'cat' : 210, 'submit' : 'Recherche', 'subcat': subcat } ) + "&term%5B17%5D%5B%5D=721"
@@ -61,7 +61,7 @@ class T411Provider(generic.TorrentProvider):
     def episodeValue(self, episode):
         values = [937, 938, 939, 940, 941, 942, 943, 944, 946, 947, 948, 949, 950, 951, 952, 954, 953, 955, 956, 957, 958, 959, 960, 961, 962, 963, 964, 965, 966, 967, 1088, 1089, 1090, 1091, 1092, 1093, 1094, 1095, 1096, 1097, 1098, 1099, 1100, 1101, 1102, 1103, 1104, 1105, 1106, 1107, 1108, 1109, 1110, 1110, 1111, 1112, 1113, 1114, 1115, 1116, 1117]
         return values[int(episode) - 1]
-        
+
     def _get_season_search_strings(self, show, season):
 
         showNam = show_name_helpers.allPossibleShowNames(show)
@@ -102,39 +102,39 @@ class T411Provider(generic.TorrentProvider):
             #results.append( self.getSearchParams( "%s %dx%d" % ( showName, ep_obj.season, ep_obj.episode ), ep_obj.show.audio_lang, 634 ))
             results.append( self.getSearchParams( "%s %dx%02d" % ( showName, ep_obj.scene_season, ep_obj.scene_episode ), ep_obj.show.audio_lang, 639, french ))
         return results
-    
+
     def _get_title_and_url(self, item):
         return (item.title, item.url)
-    
+
     def getQuality(self, item):
         return item.getQuality()
-    
+
     def _doLogin(self, login, password):
 
         data = urllib.urlencode({'login': login, 'password' : password, 'submit' : 'Connexion', 'remember': 1, 'url' : '/'})
         self.opener.open(self.url + '/users/login', data)
-    
+
     def _doSearch(self, searchString, show=None, season=None, french=None):
-        
+
         if not self.login_done:
             self._doLogin( sickbeard.T411_USERNAME, sickbeard.T411_PASSWORD )
 
         results = []
         searchUrl = self.url + '/torrents/search/?' + searchString.replace('!','')
         logger.log(u"Search string: " + searchUrl, logger.DEBUG)
-        
+
         r = self.opener.open( searchUrl )
         soup = BeautifulSoup( r, "html.parser" )
         resultsTable = soup.find("table", { "class" : "results" })
         if resultsTable:
             rows = resultsTable.find("tbody").findAll("tr")
-    
+
             for row in rows:
                 link = row.find("a", title=True)
                 title = link['title']
                 id = row.find_all('td')[2].find_all('a')[0]['href'][1:].replace('torrents/nfo/?id=','')
                 downloadURL = ('http://www.t411.io/torrents/download/?id=%s' % id)
-                
+
                 quality = Quality.nameQuality( title )
                 if quality==Quality.UNKNOWN and title:
                     if '720p' not in title.lower() and '1080p' not in title.lower():
@@ -145,9 +145,9 @@ class T411Provider(generic.TorrentProvider):
                     results.append( T411SearchResult( self.opener, link['title'], downloadURL, quality, 'fr' ) )
                 else:
                     results.append( T411SearchResult( self.opener, link['title'], downloadURL, quality ) )
-                
+
         return results
-    
+
     def getResult(self, episodes):
         """
         Returns a result of the correct type for this provider
@@ -155,17 +155,17 @@ class T411Provider(generic.TorrentProvider):
         result = classes.TorrentDataSearchResult(episodes)
         result.provider = self
 
-        return result    
-    
+        return result
+
 class T411SearchResult:
-    
+
     def __init__(self, opener, title, url, quality, audio_langs=None):
         self.opener = opener
         self.title = title
         self.url = url
         self.quality = quality
         self.audio_langs=audio_langs
-        
+
     def getNZB(self):
         return self.opener.open( self.url , 'wb').read()
 
